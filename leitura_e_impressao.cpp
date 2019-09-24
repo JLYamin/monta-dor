@@ -1,11 +1,12 @@
 /* Módulo criado para encapsular funções de leitura e escrita
 
 */
-#include <fstream>
-#include <iostream>
-using namespace std;
 
-int main () {
+#include "leitura_e_impressao.hpp"
+
+
+Leitor::Leitor(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
+{
   ifstream infile ("Entradas ASM/bin.asm");
   if (infile) {
     string data;
@@ -35,6 +36,11 @@ int main () {
   } else {
       cout << "Problemas ao ler arquivo";
   }
+}
 
-   return 0;
+int main(){
+  /* Main criada para testes manuais */
+  Leitor leitura;
+  cout << leitura.texto_lido;
+  return 0;
 }
