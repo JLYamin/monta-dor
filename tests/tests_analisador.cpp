@@ -66,8 +66,19 @@ TEST_CASE( "Rótulo", "[Lexico]" )
 
 TEST_CASE( "Comentários", "[Lexico]" ) 
 { 
-  SECTION("Reconhece ponto e vírgula")
+  SECTION("Reconhece ponto e vírgula no começo")
   {
     REQUIRE( is_comment(";"));
+    REQUIRE( is_comment(";ISSO É UM COMENTÁRIO"));
+  }
+
+    SECTION("Rejeita frases que não começam com ponto e vírgula")
+  {
+    REQUIRE_FALSE( is_comment("NÃO É COMENTÁRIO;"));
+    REQUIRE_FALSE( is_comment("ISSO NÃO É UM COMENTÁRIO"));
+    REQUIRE_FALSE( is_comment("ISSO NÃO É UM; COMENTÁRIO"));
+    REQUIRE_FALSE( is_comment("I;SSO NÃO É UM; COMENTÁRIO"));
+
+
   }
 }

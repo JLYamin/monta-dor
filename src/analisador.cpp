@@ -30,5 +30,17 @@ bool is_variable(const string s)
 }
 
 bool is_comment(const string s){
-  return false;
+    if( s.empty() ) {
+    return false;
+  } 
+
+  if( s.empty() ) {
+    return false;
+  } 
+
+  const string primeira_letra(1, s.at(0));
+
+  if( ";" != primeira_letra ) return false;
+
+  return true;
 }
