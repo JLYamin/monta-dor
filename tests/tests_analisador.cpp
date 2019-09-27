@@ -47,7 +47,18 @@ TEST_CASE( "Rótulo", "[Lexico]" )
     REQUIRE( is_label("ROTULAO"));
     REQUIRE( is_label("ROTU434lo"));
     REQUIRE( is_label("ROTULO_VALIDO"));
+  }
 
+  SECTION("Rótulo começando com dígito")
+  {
+    REQUIRE_FALSE( is_label("4Rotulo"));
+    REQUIRE_FALSE( is_label("5ROTULAO"));
+    REQUIRE_FALSE( is_label("2ROTU434lo"));
+  }
 
+  SECTION("Rótulo com símbolos")
+  {
+    REQUIRE_FALSE( is_label("@TULO_VALIDO"));
+    REQUIRE_FALSE( is_label("3@OTULO_VALIDO"));
   }
 } // TEST_CASE( "Rótulo", "[Lexico]" ) 

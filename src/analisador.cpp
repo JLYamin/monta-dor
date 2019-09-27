@@ -19,9 +19,12 @@ bool is_label(const string s)
   if( s.empty() ) {
     return false;
   } 
-  if( is_decimal( &s[0]) ) return false;
 
-  return !s.empty() && find_if(s.begin(), 
+  const string primeira_letra(1, s.at(0));
+
+  if( is_decimal( primeira_letra ) ) return false;
+  
+  return find_if(s.begin(), 
       s.end(), [](char c) { return !isalpha(c) && !isdigit(c) && c != '_'; }) == s.end();
   return true;  
 }
