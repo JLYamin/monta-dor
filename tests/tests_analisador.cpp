@@ -43,6 +43,10 @@ TEST_CASE( "Rótulo", "[Lexico]" )
   //! Testes focados em validar se o analisador léxico consegue reconhecer números
   SECTION("Rótulo válido")
   {
-    REQUIRE(is_label("Rotulo"));
+    REQUIRE( is_label("Rotulo"));
+    REQUIRE( is_label("ROTULAO"));
+    REQUIRE( is_label("ROTU434lo"));
+
+
   }
 } // TEST_CASE( "Rótulo", "[Lexico]" ) 

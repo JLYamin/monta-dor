@@ -16,5 +16,12 @@ bool is_decimal(const string s){
 
 bool is_label(const string s)
 {
-  return false;
+  if( s.empty() ) {
+    return false;
+  } 
+  if( is_decimal( &s[0]) ) return false;
+
+  return !s.empty() && find_if(s.begin(), 
+      s.end(), [](char c) { return !isalpha(c); }) == s.end();
+  return true;  
 }
