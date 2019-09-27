@@ -87,5 +87,19 @@ TEST_CASE( "Rótulo", "[Lexico]" )
   SECTION("Rótulo válido")
   {
     REQUIRE(is_label("Abacate:"));
+    REQUIRE(is_label("Abac4te:"));
+    REQUIRE(is_label("Abac_ate:"));
+    REQUIRE(is_label("Abac_4te:"));
+
   } // SECTION("Rótulo válido")
+
+  SECTION("Rótulo inválido")
+  {
+    REQUIRE_FALSE(is_label("5Abacate:"));
+    REQUIRE_FALSE(is_label("5Ab@cate:"));
+    REQUIRE_FALSE(is_label("Abacate"));
+    REQUIRE_FALSE(is_label(":Abacat32"));
+    REQUIRE_FALSE(is_label("Abac:at32"));
+    REQUIRE_FALSE(is_label("Abacat32::"));
+  } // SECTION("Rótulo inválido")
 }
