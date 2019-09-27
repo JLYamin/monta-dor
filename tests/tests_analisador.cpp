@@ -43,22 +43,27 @@ TEST_CASE( "Rótulo", "[Lexico]" )
   //! Testes focados em validar se o analisador léxico consegue reconhecer números
   SECTION("Rótulo válido")
   {
-    REQUIRE( is_label("Rotulo"));
-    REQUIRE( is_label("ROTULAO"));
-    REQUIRE( is_label("ROTU434lo"));
-    REQUIRE( is_label("ROTULO_VALIDO"));
+    REQUIRE( is_variable("Variavel"));
+    REQUIRE( is_variable("ROTULAO"));
+    REQUIRE( is_variable("ROTU434lo"));
+    REQUIRE( is_variable("Variavel_VALIDO"));
   }
 
   SECTION("Rótulo começando com dígito")
   {
-    REQUIRE_FALSE( is_label("4Rotulo"));
-    REQUIRE_FALSE( is_label("5ROTULAO"));
-    REQUIRE_FALSE( is_label("2ROTU434lo"));
+    REQUIRE_FALSE( is_variable("4Variavel"));
+    REQUIRE_FALSE( is_variable("5ROTULAO"));
+    REQUIRE_FALSE( is_variable("2ROTU434lo"));
   }
 
   SECTION("Rótulo com símbolos")
   {
-    REQUIRE_FALSE( is_label("@TULO_VALIDO"));
-    REQUIRE_FALSE( is_label("3@OTULO_VALIDO"));
+    REQUIRE_FALSE( is_variable("@TULO_INVALIDO"));
+    REQUIRE_FALSE( is_variable("3@OTULO_INVAlIDO"));
+    REQUIRE_FALSE( is_variable("3@OTULO_INVALIDO:"));
   }
 } // TEST_CASE( "Rótulo", "[Lexico]" ) 
+
+TEST_CASE( "Rótulo", "[Lexico]" ) 
+{ 
+}
