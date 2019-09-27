@@ -20,9 +20,9 @@ bool is_variable(const string token)
     return false;
   } 
 
-  const string primeira_letra(1, token.at(0));
+  const string primeiro_simbolo(1, token.at(0));
 
-  if( is_decimal( primeira_letra ) ) return false;
+  if( is_decimal( primeiro_simbolo ) ) return false;
 
   return find_if(token.begin(), 
       token.end(), [](char caractere) { return !isalpha(caractere) && !isdigit(caractere) && caractere != '_'; }) == token.end();
@@ -38,9 +38,9 @@ bool is_comment(const string token){
     return false;
   } 
 
-  const string primeira_letra(1, token.at(0));
+  const string primeiro_simbolo(1, token.at(0));
 
-  if( ";" != primeira_letra ) return false;
+  if( ";" != primeiro_simbolo ) return false;
 
   return true;
 }
@@ -51,11 +51,15 @@ bool is_label(const string token)
     return false;
   } 
 
-  const string primeira_letra(1, token.at(0));
+  const string primeiro_simbolo(1, token.at(0));
+  if( is_decimal( primeiro_simbolo ) ) return false;
 
-  if( is_decimal( primeira_letra ) ) return false;
+  if( token.at(token.size()-1) != ':') return false;
 
-  return find_if(token.begin(), 
-      token.end(), [](char caractere) { return !isalpha(caractere) && !isdigit(caractere) && caractere != '_'; }) == token.end();
+  const string corpo_rotulo(token.substr(0, token.size() - 1));
+  cout << corpo_rotulo << endl;
+
+  return find_if(corpo_rotulo.begin(), 
+      corpo_rotulo.end(), [](char caractere) { return !isalpha(caractere) && !isdigit(caractere) && caractere != '_'; }) == corpo_rotulo.end();
   return true;  
 }
