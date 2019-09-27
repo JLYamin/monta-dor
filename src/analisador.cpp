@@ -5,7 +5,7 @@
 #include "analisador.hpp"
 
 
-bool analisador_lexico(const string s){
+bool is_decimal(const string s){
   /*
   Função recebe uma string sem espaços dentro e
   retorna se é um token válido ou não.

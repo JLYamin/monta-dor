@@ -5,4 +5,4 @@
 #endif
 
 
-bool analisador_lexico(string);
+bool is_decimal(string);
