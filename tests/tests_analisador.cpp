@@ -1,11 +1,11 @@
 #include "analisador.hpp"
 
-TEST_CASE( "Update", "[square]" ) 
+TEST_CASE( "Número", "[Lexico]" ) 
 { 
-  //! These test case will focus on methods that
-  //! updates squares
-  // These tests will focus on:
-  // unsigned short int Square::setPiece(Pawn *)
+  //! Testes focados em validar se o analisador léxico consegue reconhecer números
+  SECTION("Decimal Posito")
+  {
+    REQUIRE_FALSE("Não valida");
+  }
 
-
-} // TEST_CASE( "Update", "[square]" ) 
+} // TEST_CASE( "Number", "[Lexico]" ) 
