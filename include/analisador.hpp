@@ -6,3 +6,5 @@
 
 
 bool is_decimal(string);
+bool is_label(string);
+

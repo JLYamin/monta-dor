@@ -13,3 +13,8 @@ bool is_decimal(const string s){
   return !s.empty() && find_if(s.begin(), 
       s.end(), [](char c) { return !isdigit(c); }) == s.end();
 }
+
+bool is_label(const string s)
+{
+  return false;
+}
