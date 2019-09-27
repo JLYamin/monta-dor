@@ -48,3 +48,33 @@ Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasíl
  Acho que é isso! Fique com esse gif fofo:
  
  ![Gif fofo](https://media.giphy.com/media/4Zo41lhzKt6iZ8xff9/giphy.gif "Cachorrinhoooo")
+
+
+### Instalação
+
+Depois de extrair ou clonar o repositório, entre na pasta principal e digite em seu terminal:
+```
+make
+```
+
+### Usando o Simulador
+Após isso, você pode executar o simulador usando  ocomando
+```
+./play_assembler
+```
+
+## Executando os testes
+
+Na pasta principal:
+Para compilar todos os testes, basta digitar:
+```
+make all_tester
+```
+Se você quiser ver os testes antes de executá-los:
+```
+./all_tester --list-tests
+```
+Ou pode somente rodar os testes:
+```
+./all_tester 
+```
