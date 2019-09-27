@@ -46,6 +46,7 @@ TEST_CASE( "Rótulo", "[Lexico]" )
     REQUIRE( is_label("Rotulo"));
     REQUIRE( is_label("ROTULAO"));
     REQUIRE( is_label("ROTU434lo"));
+    REQUIRE( is_label("ROTULO_VALIDO"));
 
 
   }

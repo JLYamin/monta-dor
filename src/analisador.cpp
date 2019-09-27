@@ -22,6 +22,6 @@ bool is_label(const string s)
   if( is_decimal( &s[0]) ) return false;
 
   return !s.empty() && find_if(s.begin(), 
-      s.end(), [](char c) { return !isalpha(c) && !isdigit(c); }) == s.end();
+      s.end(), [](char c) { return !isalpha(c) && !isdigit(c) && c != '_'; }) == s.end();
   return true;  
 }
