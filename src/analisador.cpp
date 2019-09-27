@@ -28,3 +28,7 @@ bool is_variable(const string s)
       s.end(), [](char c) { return !isalpha(c) && !isdigit(c) && c != '_'; }) == s.end();
   return true;  
 }
+
+bool is_comment(const string s){
+  return false;
+}

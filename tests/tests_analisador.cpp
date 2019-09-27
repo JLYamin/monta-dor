@@ -64,6 +64,10 @@ TEST_CASE( "Rótulo", "[Lexico]" )
   }
 } // TEST_CASE( "Rótulo", "[Lexico]" ) 
 
-TEST_CASE( "Rótulo", "[Lexico]" ) 
+TEST_CASE( "Comentários", "[Lexico]" ) 
 { 
+  SECTION("Reconhece ponto e vírgula")
+  {
+    REQUIRE( is_comment(";"));
+  }
 }
