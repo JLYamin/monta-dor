@@ -4,3 +4,5 @@
 #include "catch.hpp"
 #endif
 
+
+bool analisador_lexico(string);
