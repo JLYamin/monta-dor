@@ -63,3 +63,8 @@ bool is_label(const string token)
       corpo_rotulo.end(), [](char caractere) { return !isalpha(caractere) && !isdigit(caractere) && caractere != '_'; }) == corpo_rotulo.end();
   return true;  
 }
+
+bool is_session(const string token)
+{
+  return false;
+}

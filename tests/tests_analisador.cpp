@@ -102,4 +102,13 @@ TEST_CASE( "Rótulo", "[Lexico]" )
     REQUIRE_FALSE(is_label("Abac:at32"));
     REQUIRE_FALSE(is_label("Abacat32::"));
   } // SECTION("Rótulo inválido")
+} //TEST_CASE( "Rótulo", "[Lexico]" ) 
+
+
+TEST_CASE( "Sessão", "[Lexico]" ) {
+  SECTION("Sessão válida")
+  {
+    REQUIRE(is_session("SECTION"));
+  } // SECTION("Rótulo válido")
+  
 }
