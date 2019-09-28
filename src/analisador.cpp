@@ -6,6 +6,9 @@
 
 Scanner::Scanner()
 {
+  /* Na tabela de OPCODES, o primeiro termo é a chave, o segundo é um vetor de inteiro com 
+  o código da instrução e o tamanho que ela ocupará 
+  */
   tabela_opcodes = {   {"ADD", {1, 2}}, {"SUB", {2, 2}}, {"MULT", {3, 2}}
         , {"DIV", {4, 2}}, {"JMP", {5, 2}}, {"JMPN", {6, 2}}
         , {"JMPP", {7, 2}}, {"JMPZ", {8, 2}}, {"COPY", {9, 3}}
@@ -25,6 +28,7 @@ bool Scanner::is_decimal(const string token){
 
 bool Scanner::is_variable(const string token)
 {
+  /* Verifica se é o nome de uma variável válido */
   if( token.empty() ) {
     return false;
   } 
@@ -38,7 +42,8 @@ bool Scanner::is_variable(const string token)
   return true;  
 }
 
-bool Scanner::is_comment(const string token){
+bool Scanner::is_comment(const string token)
+{
     if( token.empty() ) {
     return false;
   } 
@@ -61,6 +66,7 @@ bool Scanner::is_label(const string token)
   } 
 
   const string primeiro_simbolo(1, token.at(0));
+  
   if( is_decimal( primeiro_simbolo ) ) return false;
 
   if( token.at(token.size()-1) != ':') return false;
