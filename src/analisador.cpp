@@ -65,7 +65,7 @@ bool is_label(const string token)
 
 bool is_session(const string token)
 {
-  if (!is_label(token )) 
+  if (!is_label( token )) 
   {
     
     return ( token == "SECTION" );
@@ -76,5 +76,11 @@ bool is_session(const string token)
 
 bool is_opcode(const string token)
 {
-  return false;
+  unordered_set<string> tabela_opcodes { "ADD" };
+  if (!is_label( token )) 
+  {
+    return ( tabela_opcodes.find(token)  != tabela_opcodes.end() );
+  } else {
+    return false;
+  }
 }
