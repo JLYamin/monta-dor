@@ -4,8 +4,27 @@
 
 #include "analisador.hpp"
 
+Scanner::Scanner()
+{
+  /* Na tabela de OPCODES, o primeiro termo é a chave, o segundo é um vetor de inteiro com 
+  o código da instrução e o tamanho que ela ocupará 
+  */
+  tabela_opcodes = {   {"ADD", {1, 2}}, {"SUB", {2, 2}}, {"MULT", {3, 2}}
+        , {"DIV", {4, 2}}, {"JMP", {5, 2}}, {"JMPN", {6, 2}}
+        , {"JMPP", {7, 2}}, {"JMPZ", {8, 2}}, {"COPY", {9, 3}}
+        , {"LOAD", {10, 2}}, {"STORE", {11, 2}}, {"INPUT", {12, 2}}
+        , {"OUTPUT", {13, 2}}, {"STOP", {14, 1}}
+    };
 
-bool is_decimal(const string token){
+  tabela_directives = { {"SECTION", 1 }
+        ,  {"SPACE", 1 }
+        ,  {"CONST", 1 }
+        ,  {"EQU", 1 }
+        ,  {"IF", 1 }
+    };
+}
+
+bool Scanner::is_decimal(const string token){
   /*
   Função recebe uma string sem espaços dentro e
   retorna se é um token válido ou não.
@@ -14,8 +33,9 @@ bool is_decimal(const string token){
       token.end(), [](char caractere) { return !isdigit(caractere); }) == token.end();
 }
 
-bool is_variable(const string token)
+bool Scanner::is_variable(const string token)
 {
+  /* Verifica se é o nome de uma variável válido */
   if( token.empty() ) {
     return false;
   } 
@@ -29,7 +49,8 @@ bool is_variable(const string token)
   return true;  
 }
 
-bool is_comment(const string token){
+bool Scanner::is_comment(const string token)
+{
     if( token.empty() ) {
     return false;
   } 
@@ -45,13 +66,14 @@ bool is_comment(const string token){
   return true;
 }
 
-bool is_label(const string token)
+bool Scanner::is_label(const string token)
 {
   if( token.empty() ) {
     return false;
   } 
 
   const string primeiro_simbolo(1, token.at(0));
+  
   if( is_decimal( primeiro_simbolo ) ) return false;
 
   if( token.at(token.size()-1) != ':') return false;
@@ -63,27 +85,18 @@ bool is_label(const string token)
   return true;  
 }
 
-bool is_session(const string token)
+bool Scanner::is_directive(const string token)
 {
   if (!is_label( token )) 
   {
-    
-    return ( token == "SECTION" );
+    return ( tabela_directives.find(token)  != tabela_directives.end() );
   } else {
     return false;
   }
 }
 
-bool is_opcode(const string token)
+bool Scanner::is_opcode(const string token)
 {
-  unordered_set<string> tabela_opcodes 
-  { "ADD", "SUB", "MULT"
-    ,"DIV", "JMP", "JMPN"
-    , "JMPP", "JMPZ", "COPY"
-    , "LOAD", "STORE", "INPUT"
-    , "OUTPUT", "STOP"
-  };
-
 
   if (!is_label( token )) 
   {

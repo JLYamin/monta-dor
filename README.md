@@ -16,14 +16,14 @@ Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasíl
 (*Baseado nas funcionalidades que a princípio acho que existirão*)
 #### Montador:
   - [ ] Leitura
-    - [ ] Receber e abrir o arquivo
+    - [x] Receber e abrir o arquivo
     - [ ] Contador de endereços/posição
   - [ ] Parser
     - [ ] Detecção das áreas de texto e *data*
     - [ ] Deteção das linhas
-    - [ ] Detecção das instruções
+    - [x] Detecção das instruções
     - [ ] Detecção dos argumentos das instruções
-    - [ ] Detecção de rótulos (com ou sem enter após)
+    - [x] Detecção de rótulos (com ou sem enter após)
   - [ ] Tabelas
     - [ ] Tabela de Instruções para consulta
     - [ ] Montagem da tabela de símbolos

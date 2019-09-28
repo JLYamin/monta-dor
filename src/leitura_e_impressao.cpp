@@ -33,7 +33,17 @@ Leitor::Leitor(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
     // ...buffer contains the entire file...
 
     delete[] buffer;
+    
     transform(data.begin(), data.end(), data.begin(), ::toupper);
+
+    regex multiplos_espacos_comeco_linha("^([ ]{2,}|[\t])");
+    regex multiplos_espacos("([ ]{2,}|[\t])");
+    regex multiplos_saltos_linha("(\n+)");
+
+    regex_replace(data, multiplos_espacos_comeco_linha, "");
+    regex_replace(data, multiplos_espacos, " ");
+    regex_replace(data, multiplos_saltos_linha, "\n");
+
   } else {
       cout << "Problemas ao ler arquivo";
   }
@@ -41,7 +51,7 @@ Leitor::Leitor(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
 
 /*
 int main(){
-  /* Main criada para testes manuais 
+  /* Main criada para testes manuais
   Leitor leitura;
   cout << leitura.texto_lido;
   return 0;
