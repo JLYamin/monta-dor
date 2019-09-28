@@ -4,8 +4,17 @@
 
 #include "analisador.hpp"
 
+Scanner::Scanner()
+{
+  tabela_opcodes = {   {"ADD", {1, 2}}, {"SUB", {2, 2}}, {"MULT", {3, 2}}
+        , {"DIV", {4, 2}}, {"JMP", {5, 2}}, {"JMPN", {6, 2}}
+        , {"JMPP", {7, 2}}, {"JMPZ", {8, 2}}, {"COPY", {9, 3}}
+        , {"LOAD", {10, 2}}, {"STORE", {11, 2}}, {"INPUT", {12, 2}}
+        , {"OUTPUT", {13, 2}}, {"STOP", {14, 1}}
+    };
+}
 
-bool is_decimal(const string token){
+bool Scanner::is_decimal(const string token){
   /*
   Função recebe uma string sem espaços dentro e
   retorna se é um token válido ou não.
@@ -14,7 +23,7 @@ bool is_decimal(const string token){
       token.end(), [](char caractere) { return !isdigit(caractere); }) == token.end();
 }
 
-bool is_variable(const string token)
+bool Scanner::is_variable(const string token)
 {
   if( token.empty() ) {
     return false;
@@ -29,7 +38,7 @@ bool is_variable(const string token)
   return true;  
 }
 
-bool is_comment(const string token){
+bool Scanner::is_comment(const string token){
     if( token.empty() ) {
     return false;
   } 
@@ -45,7 +54,7 @@ bool is_comment(const string token){
   return true;
 }
 
-bool is_label(const string token)
+bool Scanner::is_label(const string token)
 {
   if( token.empty() ) {
     return false;
@@ -63,7 +72,7 @@ bool is_label(const string token)
   return true;  
 }
 
-bool is_session(const string token)
+bool Scanner::is_session(const string token)
 {
   if (!is_label( token )) 
   {
@@ -74,16 +83,8 @@ bool is_session(const string token)
   }
 }
 
-bool is_opcode(const string token)
+bool Scanner::is_opcode(const string token)
 {
-  unordered_map<string, vector<int> > tabela_opcodes 
-  {   {"ADD", {1, 1}}, {"SUB", {1, 1}}, {"MULT", {1, 1}}
-    , {"DIV", {1, 1}}, {"JMP", {1, 1}}, {"JMPN", {1, 1}}
-    , {"JMPP", {1, 1}}, {"JMPZ", {1, 1}}, {"COPY", {1, 1}}
-    , {"LOAD", {1, 1}}, {"STORE", {1, 1}}, {"INPUT", {1, 1}}
-    , {"OUTPUT", {1, 1}}, {"STOP", {1, 1}}
-  };
-
 
   if (!is_label( token )) 
   {
