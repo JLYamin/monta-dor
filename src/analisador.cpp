@@ -57,9 +57,38 @@ bool is_label(const string token)
   if( token.at(token.size()-1) != ':') return false;
 
   const string corpo_rotulo(token.substr(0, token.size() - 1));
-  cout << corpo_rotulo << endl;
 
   return find_if(corpo_rotulo.begin(), 
       corpo_rotulo.end(), [](char caractere) { return !isalpha(caractere) && !isdigit(caractere) && caractere != '_'; }) == corpo_rotulo.end();
   return true;  
+}
+
+bool is_session(const string token)
+{
+  if (!is_label( token )) 
+  {
+    
+    return ( token == "SECTION" );
+  } else {
+    return false;
+  }
+}
+
+bool is_opcode(const string token)
+{
+  unordered_set<string> tabela_opcodes 
+  { "ADD", "SUB", "MULT"
+    ,"DIV", "JMP", "JMPN"
+    , "JMPP", "JMPZ", "COPY"
+    , "LOAD", "STORE", "INPUT"
+    , "OUTPUT", "STOP"
+  };
+
+
+  if (!is_label( token )) 
+  {
+    return ( tabela_opcodes.find(token)  != tabela_opcodes.end() );
+  } else {
+    return false;
+  }
 }

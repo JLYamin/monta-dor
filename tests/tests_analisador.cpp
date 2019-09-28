@@ -102,4 +102,71 @@ TEST_CASE( "Rótulo", "[Lexico]" )
     REQUIRE_FALSE(is_label("Abac:at32"));
     REQUIRE_FALSE(is_label("Abacat32::"));
   } // SECTION("Rótulo inválido")
-}
+} //TEST_CASE( "Rótulo", "[Lexico]" ) 
+
+
+TEST_CASE( "Sessão", "[Lexico]" )
+{
+  SECTION("Sessão válida")
+  {
+    REQUIRE(is_session  ("SECTION"));
+
+  } // SECTION("Sessão válida")
+
+  SECTION("Sessão inválida")
+  {
+    REQUIRE_FALSE(is_session  ("SESSÃO"));
+    REQUIRE_FALSE(is_session  ("SESSAO"));
+    REQUIRE_FALSE(is_session  ("SESSION"));
+    REQUIRE_FALSE(is_session  ("3SADSADA"));
+    REQUIRE_FALSE(is_session  ("2SECTION"));
+    REQUIRE_FALSE(is_session  ("_SECTION"));
+    REQUIRE_FALSE(is_session  ("S3CTION"));
+    REQUIRE_FALSE(is_session  ("SECTION1"));
+    REQUIRE_FALSE(is_session  ("SECTIONN"));
+  } // SECTION("Sessão inválida")
+} // TEST_CASE( "Sessão", "[Lexico]" )
+
+TEST_CASE( "OPCODE", "[Lexico]" )
+{
+  SECTION("OPCODE válido")
+  {
+    REQUIRE(is_opcode("ADD"));
+    REQUIRE(is_opcode("SUB"));
+    REQUIRE(is_opcode("MULT"));
+
+    REQUIRE(is_opcode("DIV"));
+    REQUIRE(is_opcode("JMP"));
+    REQUIRE(is_opcode("JMPN"));
+
+    REQUIRE(is_opcode("JMPP"));
+    REQUIRE(is_opcode("JMPZ"));
+    REQUIRE(is_opcode("COPY"));
+
+    REQUIRE(is_opcode("LOAD"));
+    REQUIRE(is_opcode("STORE"));
+    REQUIRE(is_opcode("INPUT"));
+
+    REQUIRE(is_opcode("OUTPUT"));
+    REQUIRE(is_opcode("STOP"));
+  } // SECTION("OPCODE válido")
+
+  SECTION("OPCODE inválido")
+  {
+    REQUIRE_FALSE(is_session  ("SESSÃO"));
+    REQUIRE_FALSE(is_session  ("SESSAO"));
+    REQUIRE_FALSE(is_session  ("SESSION"));
+    REQUIRE_FALSE(is_session  ("3SADSADA"));
+    REQUIRE_FALSE(is_session  ("2SECTION"));
+    REQUIRE_FALSE(is_session  ("_SECTION"));
+    REQUIRE_FALSE(is_session  ("S3CTION"));
+    REQUIRE_FALSE(is_session  ("SECTION1"));
+    REQUIRE_FALSE(is_session  ("SECTIONN"));
+    REQUIRE_FALSE(is_label("5Abacate:"));
+    REQUIRE_FALSE(is_label("5Ab@cate:"));
+    REQUIRE_FALSE(is_label("Abacate"));
+    REQUIRE_FALSE(is_label(":Abacat32"));
+    REQUIRE_FALSE(is_label("Abac:at32"));
+    REQUIRE_FALSE(is_label("Abacat32::"));
+  }// SECTION("OPCODE inválido")
+} // TEST_CASE( "OPCODE", "[Lexico]" )

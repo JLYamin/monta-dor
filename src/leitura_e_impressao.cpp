@@ -33,6 +33,7 @@ Leitor::Leitor(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
     // ...buffer contains the entire file...
 
     delete[] buffer;
+    transform(data.begin(), data.end(), data.begin(), ::toupper);
   } else {
       cout << "Problemas ao ler arquivo";
   }
