@@ -132,6 +132,23 @@ TEST_CASE( "OPCODE", "[Lexico]" )
   SECTION("Sessão válida")
   {
     REQUIRE(is_opcode("ADD"));
+    REQUIRE(is_opcode("SUB"));
+    REQUIRE(is_opcode("MULT"));
+
+    REQUIRE(is_opcode("DIV"));
+    REQUIRE(is_opcode("JMP"));
+    REQUIRE(is_opcode("JMPN"));
+
+    REQUIRE(is_opcode("JMPP"));
+    REQUIRE(is_opcode("JMPZ"));
+    REQUIRE(is_opcode("COPY"));
+
+    REQUIRE(is_opcode("LOAD"));
+    REQUIRE(is_opcode("STORE"));
+    REQUIRE(is_opcode("INPUT"));
+
+    REQUIRE(is_opcode("OUTPUT"));
+    REQUIRE(is_opcode("STOP"));
   } // SECTION("Sessão válida")
 
 } // TEST_CASE( "OPCODE", "[Lexico]" )

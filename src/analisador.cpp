@@ -76,7 +76,15 @@ bool is_session(const string token)
 
 bool is_opcode(const string token)
 {
-  unordered_set<string> tabela_opcodes { "ADD" };
+  unordered_set<string> tabela_opcodes 
+  { "ADD", "SUB", "MULT"
+    ,"DIV", "JMP", "JMPN"
+    , "JMPP", "JMPZ", "COPY"
+    , "LOAD", "STORE", "INPUT"
+    , "OUTPUT", "STOP"
+  };
+
+
   if (!is_label( token )) 
   {
     return ( tabela_opcodes.find(token)  != tabela_opcodes.end() );
