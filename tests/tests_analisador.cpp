@@ -108,7 +108,8 @@ TEST_CASE( "Rótulo", "[Lexico]" )
 TEST_CASE( "Sessão", "[Lexico]" ) {
   SECTION("Sessão válida")
   {
-    REQUIRE(is_session("SECTION"));
+    REQUIRE(is_session  ("SECTION"));
+
   } // SECTION("Rótulo válido")
   
 }

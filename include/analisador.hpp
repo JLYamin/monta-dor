@@ -5,6 +5,7 @@
 #endif
 
 
+
 bool is_decimal(string);
 bool is_variable(string);
 bool is_comment(string);
