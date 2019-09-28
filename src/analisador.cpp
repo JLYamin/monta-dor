@@ -78,7 +78,7 @@ bool Scanner::is_label(const string token)
   return true;  
 }
 
-bool Scanner::is_session(const string token)
+bool Scanner::is_directive(const string token)
 {
   if (!is_label( token )) 
   {

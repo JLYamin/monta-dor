@@ -8,15 +8,16 @@
 class Scanner
 {
     public:
-    unordered_map<string, vector<int> > tabela_opcodes;
+    unordered_map< string, vector<int> > tabela_opcodes;
     Scanner( );
     ~Scanner();
     bool is_decimal(string);
     bool is_variable(string);
     bool is_comment(string);
     bool is_label(string);
-    bool is_session(string);
+    bool is_directive(string);
     bool is_opcode(string);
+
 };
 
 

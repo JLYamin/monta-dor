@@ -106,25 +106,25 @@ TEST_CASE( "Rótulo", "[Lexico]" )
 } //TEST_CASE( "Rótulo", "[Lexico]" ) 
 
 
-TEST_CASE( "Sessão", "[Lexico]" )
+TEST_CASE( "Diretiva", "[Lexico]" )
 {
-  SECTION("Sessão válida")
+  SECTION("Diretivas válidas")
   {
-    REQUIRE(analisador_lexico->is_session  ("SECTION"));
+    REQUIRE(analisador_lexico->is_directive  ("SECTION"));
 
-  } // SECTION("Sessão válida")
+  } // SECTION("Diretiva válida")
 
-  SECTION("Sessão inválida")
+  SECTION("Diretivas inválidas")
   {
-    REQUIRE_FALSE(analisador_lexico->is_session  ("SESSÃO"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("SESSAO"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("SESSION"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("3SADSADA"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("2SECTION"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("_SECTION"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("S3CTION"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("SECTION1"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("SECTIONN"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("SESSÃO"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("SESSAO"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("SESSION"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("3SADSADA"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("2SECTION"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("_SECTION"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("S3CTION"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("SECTION1"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("SECTIONN"));
   } // SECTION("Sessão inválida")
 } // TEST_CASE( "Sessão", "[Lexico]" )
 
@@ -154,15 +154,15 @@ TEST_CASE( "OPCODE", "[Lexico]" )
 
   SECTION("OPCODE inválido")
   {
-    REQUIRE_FALSE(analisador_lexico->is_session  ("SESSÃO"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("SESSAO"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("SESSION"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("3SADSADA"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("2SECTION"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("_SECTION"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("S3CTION"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("SECTION1"));
-    REQUIRE_FALSE(analisador_lexico->is_session  ("SECTIONN"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("SESSÃO"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("SESSAO"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("SESSION"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("3SADSADA"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("2SECTION"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("_SECTION"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("S3CTION"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("SECTION1"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("SECTIONN"));
     REQUIRE_FALSE(analisador_lexico->is_label("5Abacate:"));
     REQUIRE_FALSE(analisador_lexico->is_label("5Ab@cate:"));
     REQUIRE_FALSE(analisador_lexico->is_label("Abacate"));
