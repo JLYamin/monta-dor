@@ -76,12 +76,12 @@ bool is_session(const string token)
 
 bool is_opcode(const string token)
 {
-  unordered_set<string> tabela_opcodes 
-  { "ADD", "SUB", "MULT"
-    ,"DIV", "JMP", "JMPN"
-    , "JMPP", "JMPZ", "COPY"
-    , "LOAD", "STORE", "INPUT"
-    , "OUTPUT", "STOP"
+  unordered_map<string, vector<int> > tabela_opcodes 
+  {   {"ADD", {1, 1}}, {"SUB", {1, 1}}, {"MULT", {1, 1}}
+    , {"DIV", {1, 1}}, {"JMP", {1, 1}}, {"JMPN", {1, 1}}
+    , {"JMPP", {1, 1}}, {"JMPZ", {1, 1}}, {"COPY", {1, 1}}
+    , {"LOAD", {1, 1}}, {"STORE", {1, 1}}, {"INPUT", {1, 1}}
+    , {"OUTPUT", {1, 1}}, {"STOP", {1, 1}}
   };
 
 
