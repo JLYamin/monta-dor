@@ -111,6 +111,10 @@ TEST_CASE( "Diretiva", "[Lexico]" )
   SECTION("Diretivas válidas")
   {
     REQUIRE(analisador_lexico->is_directive  ("SECTION"));
+    REQUIRE(analisador_lexico->is_directive  ("CONST"));
+    REQUIRE(analisador_lexico->is_directive  ("SPACE"));
+    REQUIRE(analisador_lexico->is_directive  ("EQU"));
+    REQUIRE(analisador_lexico->is_directive  ("IF"));
 
   } // SECTION("Diretiva válida")
 
@@ -125,6 +129,10 @@ TEST_CASE( "Diretiva", "[Lexico]" )
     REQUIRE_FALSE(analisador_lexico->is_directive  ("S3CTION"));
     REQUIRE_FALSE(analisador_lexico->is_directive  ("SECTION1"));
     REQUIRE_FALSE(analisador_lexico->is_directive  ("SECTIONN"));
+
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("ADD"));
+    REQUIRE_FALSE(analisador_lexico->is_directive  ("MULT"));
+
   } // SECTION("Sessão inválida")
 } // TEST_CASE( "Sessão", "[Lexico]" )
 

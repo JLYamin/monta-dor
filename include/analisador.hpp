@@ -9,6 +9,7 @@ class Scanner
 {
     public:
     unordered_map< string, vector<int> > tabela_opcodes;
+    unordered_map< string, int > tabela_directives;
     Scanner( );
     ~Scanner();
     bool is_decimal(string);

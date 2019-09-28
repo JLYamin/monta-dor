@@ -15,6 +15,13 @@ Scanner::Scanner()
         , {"LOAD", {10, 2}}, {"STORE", {11, 2}}, {"INPUT", {12, 2}}
         , {"OUTPUT", {13, 2}}, {"STOP", {14, 1}}
     };
+
+  tabela_directives = { {"SECTION", 1 }
+        ,  {"SPACE", 1 }
+        ,  {"CONST", 1 }
+        ,  {"EQU", 1 }
+        ,  {"IF", 1 }
+    };
 }
 
 bool Scanner::is_decimal(const string token){
@@ -82,8 +89,7 @@ bool Scanner::is_directive(const string token)
 {
   if (!is_label( token )) 
   {
-    
-    return ( token == "SECTION" );
+    return ( tabela_directives.find(token)  != tabela_directives.end() );
   } else {
     return false;
   }
