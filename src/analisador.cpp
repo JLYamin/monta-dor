@@ -63,7 +63,7 @@ bool is_label(const string token)
   return true;  
 }
 
-bool is_session(string token)
+bool is_session(const string token)
 {
   if (!is_label(token )) 
   {
@@ -72,4 +72,9 @@ bool is_session(string token)
   } else {
     return false;
   }
+}
+
+bool is_opcode(const string token)
+{
+  return false;
 }

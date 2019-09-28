@@ -105,7 +105,8 @@ TEST_CASE( "Rótulo", "[Lexico]" )
 } //TEST_CASE( "Rótulo", "[Lexico]" ) 
 
 
-TEST_CASE( "Sessão", "[Lexico]" ) {
+TEST_CASE( "Sessão", "[Lexico]" )
+{
   SECTION("Sessão válida")
   {
     REQUIRE(is_session  ("SECTION"));
@@ -124,5 +125,13 @@ TEST_CASE( "Sessão", "[Lexico]" ) {
     REQUIRE_FALSE(is_session  ("SECTION1"));
     REQUIRE_FALSE(is_session  ("SECTIONN"));
   } // SECTION("Sessão inválida")
-  
-}
+} // TEST_CASE( "Sessão", "[Lexico]" )
+
+TEST_CASE( "OPCODE", "[Lexico]" )
+{
+  SECTION("Sessão válida")
+  {
+    REQUIRE(is_opcode("ADD"));
+  } // SECTION("Sessão válida")
+
+} // TEST_CASE( "OPCODE", "[Lexico]" )

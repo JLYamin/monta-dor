@@ -11,5 +11,6 @@ bool is_variable(string);
 bool is_comment(string);
 bool is_label(string);
 bool is_session(string);
+bool is_opcode(string);
 
 
