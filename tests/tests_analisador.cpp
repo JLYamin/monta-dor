@@ -110,6 +110,19 @@ TEST_CASE( "Sessão", "[Lexico]" ) {
   {
     REQUIRE(is_session  ("SECTION"));
 
-  } // SECTION("Rótulo válido")
+  } // SECTION("Sessão válida")
+
+  SECTION("Sessão inválida")
+  {
+    REQUIRE_FALSE(is_session  ("SESSÃO"));
+    REQUIRE_FALSE(is_session  ("SESSAO"));
+    REQUIRE_FALSE(is_session  ("SESSION"));
+    REQUIRE_FALSE(is_session  ("3SADSADA"));
+    REQUIRE_FALSE(is_session  ("2SECTION"));
+    REQUIRE_FALSE(is_session  ("_SECTION"));
+    REQUIRE_FALSE(is_session  ("S3CTION"));
+    REQUIRE_FALSE(is_session  ("SECTION1"));
+    REQUIRE_FALSE(is_session  ("SECTIONN"));
+  } // SECTION("Sessão inválida")
   
 }
