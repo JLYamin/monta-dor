@@ -205,7 +205,31 @@ string Scanner::tokenize(const string palavra )
 
 }
 
-bool Parser::captura_linha(const string token)
+Parser::Parser()
 {
+  analisador_lexico = new Scanner();
+}
+
+bool Parser::captura_linha(const string linha)
+{ 
+  if( linha.empty() ) return false;
+
+  //Procuramos o primeiro espaço
+  size_t coordenada_primeiro_espaco = linha.find(" ", 0);
+  if( coordenada_primeiro_espaco == string::npos ) return false;
+
+  string primeira_palavra = linha.substr(0, coordenada_primeiro_espaco);
+  string primeiro_token = analisador_lexico->tokenize(primeira_palavra);
+
+  if( primeiro_token == "INVALID" ) return false;
+  if( primeiro_token == "OPCODE")
+  {
+    vector<int> dados_opcode = analisador_lexico->tabela_opcodes[primeira_palavra];
+    int quantidade_argumentos = dados_opcode[1];
+    for( ; quantidade_argumentos > 0; quantidade_argumentos--) {
+      string palavra = linha.substr(0, )
+    }
+  }
+
   return false;
 }

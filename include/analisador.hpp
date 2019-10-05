@@ -30,7 +30,9 @@ class Scanner
 class Parser
 {   
     public:
+    Parser();
     ~Parser();
+    Scanner* analisador_lexico;
     bool captura_linha(string);
 };
 
