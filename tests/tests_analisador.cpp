@@ -228,8 +228,10 @@ TEST_CASE( "Retorna Token", "[Lexico]" )
   SECTION("Token válido")
   {
     REQUIRE(analisador_lexico->tokenize("1")      == "DECIMAL");
-    REQUIRE(analisador_lexico->tokenize("30")     == "DECIMAL");
+    REQUIRE(analisador_lexico->tokenize("-30")    == "DECIMAL");
     REQUIRE(analisador_lexico->tokenize("298302") == "DECIMAL");
+    REQUIRE(analisador_lexico->tokenize("0XFFFF") == "DECIMAL");
+
 
     REQUIRE(analisador_lexico->tokenize(";comentário")  == "COMMENT");
     REQUIRE(analisador_lexico->tokenize(";PAPO;MA@SSA") == "COMMENT");
@@ -250,6 +252,9 @@ TEST_CASE( "Retorna Token", "[Lexico]" )
     REQUIRE(analisador_lexico->tokenize("SECTION") == "DIRECTIVE");
     REQUIRE(analisador_lexico->tokenize("EQU")     == "DIRECTIVE");
     REQUIRE(analisador_lexico->tokenize("IF")      == "DIRECTIVE");
+
+    REQUIRE(analisador_lexico->tokenize("+") == "SYMBOL");
+    REQUIRE(analisador_lexico->tokenize("CHOCOLATE,PIMENTA")     == "COPYARGS");
   } // SECTION("Token válido")
 
   SECTION("Token inválido")

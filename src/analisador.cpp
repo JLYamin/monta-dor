@@ -168,13 +168,16 @@ bool Scanner::is_copyargumment( string token )
 string Scanner::tokenize(const string token )
 {
   // A ordem das validações é importante para OPCODE, DIRECTIVE e VARIABLE
-  if ( is_decimal(   token ) )    return "DECIMAL";
-  if ( is_comment(   token ) )    return "COMMENT";
-  if ( is_label(     token ) )    return "LABEL";
+  if ( is_decimal(       token ) )    return "DECIMAL";
+  if ( is_comment(       token ) )    return "COMMENT";
+  if ( is_label(         token ) )    return "LABEL";
 
-  if ( is_opcode(    token ) )    return "OPCODE";
-  if ( is_directive( token ) )    return "DIRECTIVE";
-  if ( is_variable(  token ) )    return "VARIABLE";
+  if ( is_opcode(        token ) )    return "OPCODE";
+  if ( is_directive(     token ) )    return "DIRECTIVE";
+  if ( is_variable(      token ) )    return "VARIABLE";
+  
+  if ( is_symbol(        token ) )    return "SYMBOL";
+  if ( is_copyargumment( token ) )    return "COPYARGS";
 
   // Se não for um token conhecido, ele é inválido
   return "INVALID";
