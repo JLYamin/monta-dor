@@ -108,5 +108,9 @@ bool Scanner::is_opcode(const string token)
 
 string Scanner::tokenize(const string token )
 {
-  return "Falso";
+  // Primeiro validamos se é um decimal
+  if ( is_decimal( token ) ) return "DECIMAL";
+  if ( is_comment(token) ) return "COMMENT";
+  if ( is_label(token) ) return "LABEL";
+
 }
