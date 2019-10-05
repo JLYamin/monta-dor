@@ -115,9 +115,22 @@ bool Scanner::is_symbol(const string token)
   else return false;
 }
 
-bool Scanner::is_copyargumment(const string token)
-{
-  return false;
+bool Scanner::is_copyargumment( string token )
+{ 
+  if( token.empty() ) return false;
+  //Procuramos a primeira vírgula
+  size_t coordenada_primeira_virgula = token.find(",", 0);
+  if( coordenada_primeira_virgula == string::npos ) return false;
+
+  // Se ela existir, validamos se o primeiro argumento é ou um decimal ou uma variável
+  string primeiro_argumento = token.substr(0, coordenada_primeira_virgula);
+  if( !is_variable(primeiro_argumento) && !is_decimal(primeiro_argumento) ) return false;
+
+  //Se o primeiro for, validamos para o segundo
+  string segundo_argumento = token.substr( coordenada_primeira_virgula + 1 , token.size()-1 );
+  if( !is_variable(segundo_argumento) && !is_decimal(segundo_argumento) ) return false;
+  
+  return true;
 }
 
 string Scanner::tokenize(const string token )
