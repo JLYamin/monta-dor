@@ -1,6 +1,8 @@
 #include "analisador.hpp"
 
 Scanner* analisador_lexico = new Scanner();
+Parser* analisador_sintatico = new Parser();
+
 TEST_CASE( "Número", "[Lexico]" ) 
 { 
   //! Testes focados em validar se o analisador léxico consegue reconhecer números

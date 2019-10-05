@@ -34,3 +34,5 @@
 *.app
 
 src/obj/
+
+all_tester
