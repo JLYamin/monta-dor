@@ -184,22 +184,37 @@ TEST_CASE( "Retorna Token", "[Lexico]" )
 {
   SECTION("Token válido")
   {
-    REQUIRE(analisador_lexico->tokenize("1") == "DECIMAL");
-    REQUIRE(analisador_lexico->tokenize("30") == "DECIMAL");
+    REQUIRE(analisador_lexico->tokenize("1")      == "DECIMAL");
+    REQUIRE(analisador_lexico->tokenize("30")     == "DECIMAL");
     REQUIRE(analisador_lexico->tokenize("298302") == "DECIMAL");
 
-    REQUIRE(analisador_lexico->tokenize(";comentário") == "COMMENT");
+    REQUIRE(analisador_lexico->tokenize(";comentário")  == "COMMENT");
     REQUIRE(analisador_lexico->tokenize(";PAPO;MA@SSA") == "COMMENT");
-    REQUIRE(analisador_lexico->tokenize(";298302") == "COMMENT");
+    REQUIRE(analisador_lexico->tokenize(";298302")      == "COMMENT");
 
-    REQUIRE(analisador_lexico->tokenize("Start:") == "LABEL");
+    REQUIRE(analisador_lexico->tokenize("Start:")  == "LABEL");
     REQUIRE(analisador_lexico->tokenize("MEXICO:") == "LABEL");
     REQUIRE(analisador_lexico->tokenize("CAFE23:") == "LABEL");
 
-    REQUIRE(analisador_lexico->tokenize("VARIAVEL") == "VARIAVEL");
-    REQUIRE(analisador_lexico->tokenize("V4R4V3L") == "VARIAVEL");
-    REQUIRE(analisador_lexico->tokenize("POPOPO") == "VARIAVEL");
+    REQUIRE(analisador_lexico->tokenize("VARIAVEL") == "VARIABLE");
+    REQUIRE(analisador_lexico->tokenize("V4R4V3L")  == "VARIABLE");
+    REQUIRE(analisador_lexico->tokenize("POPOPO")   == "VARIABLE");
 
+    REQUIRE(analisador_lexico->tokenize("ADD")  == "OPCODE");
+    REQUIRE(analisador_lexico->tokenize("SUB")  == "OPCODE");
+    REQUIRE(analisador_lexico->tokenize("JMPP") == "OPCODE");
 
-  } // SECTION("OPCODE válido")
-} // TEST_CASE( "OPCODE", "[Lexico]" )
+    REQUIRE(analisador_lexico->tokenize("SECTION") == "DIRECTIVE");
+    REQUIRE(analisador_lexico->tokenize("EQU")     == "DIRECTIVE");
+    REQUIRE(analisador_lexico->tokenize("IF")      == "DIRECTIVE");
+  } // SECTION("Token válido")
+
+  SECTION("Token inválido")
+  {
+    REQUIRE(analisador_lexico->tokenize("1NVALIDO") == "INVALID");
+    REQUIRE(analisador_lexico->tokenize("!NVALIDO") == "INVALID");
+    REQUIRE(analisador_lexico->tokenize("NTA@ONISTA") == "INVALID");
+
+  } // SECTION("Token inválido")
+
+} // TEST_CASE( "Token", "[Lexico]" )
