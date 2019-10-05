@@ -47,7 +47,9 @@ TEST_CASE( "Variável", "[Lexico]" )
     REQUIRE( analisador_lexico->is_variable("Variavel"));
     REQUIRE( analisador_lexico->is_variable("ROTULAO"));
     REQUIRE( analisador_lexico->is_variable("ROTU434lo"));
-    REQUIRE( analisador_lexico->is_variable("Variavel_VALIDO"));
+    REQUIRE( analisador_lexico->is_variable("Variavel_VALIDA"));
+    REQUIRE( analisador_lexico->is_variable("_Variavel_VALIDA"));
+
   } // SECTION("Variável válido")
 
   SECTION("Variável começando com dígito")
@@ -91,6 +93,8 @@ TEST_CASE( "Rótulo", "[Lexico]" )
     REQUIRE(analisador_lexico->is_label("Abac4te:"));
     REQUIRE(analisador_lexico->is_label("Abac_ate:"));
     REQUIRE(analisador_lexico->is_label("Abac_4te:"));
+    REQUIRE(analisador_lexico->is_label("_Abacate:"));
+
 
   } // SECTION("Rótulo válido")
 

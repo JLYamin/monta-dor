@@ -73,10 +73,12 @@ bool Scanner::is_label(const string token)
   } 
 
   const string primeiro_simbolo(1, token.at(0));
+  const string ultimo_simbolo(1, token.at(token.size()-1));
   
   if( is_decimal( primeiro_simbolo ) ) return false;
 
-  if( token.at(token.size()-1) != ':') return false;
+  //Valida se o último símbolo é : 
+  if( ultimo_simbolo.find(":", 0) == string::npos ) return false;
 
   const string corpo_rotulo(token.substr(0, token.size() - 1));
 
