@@ -105,3 +105,8 @@ bool Scanner::is_opcode(const string token)
     return false;
   }
 }
+
+string Scanner::tokenize(const string token )
+{
+  return "Falso";
+}

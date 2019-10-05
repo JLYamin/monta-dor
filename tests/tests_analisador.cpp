@@ -179,3 +179,11 @@ TEST_CASE( "OPCODE", "[Lexico]" )
     REQUIRE_FALSE(analisador_lexico->is_label("Abacat32::"));
   }// SECTION("OPCODE inválido")
 } // TEST_CASE( "OPCODE", "[Lexico]" )
+
+TEST_CASE( "Retorna Token", "[Lexico]" )
+{
+  SECTION("Token válido")
+  {
+    REQUIRE(analisador_lexico->tokenize("1") == "DECIMAL");
+  } // SECTION("OPCODE válido")
+} // TEST_CASE( "OPCODE", "[Lexico]" )
