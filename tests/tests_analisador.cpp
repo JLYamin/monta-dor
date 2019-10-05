@@ -4,12 +4,33 @@ Scanner* analisador_lexico = new Scanner();
 TEST_CASE( "Número", "[Lexico]" ) 
 { 
   //! Testes focados em validar se o analisador léxico consegue reconhecer números
-  SECTION("Decimal Posito")
+  SECTION("Decimal Positivo")
   {
     REQUIRE( analisador_lexico->is_decimal("2"));
     REQUIRE( analisador_lexico->is_decimal("99999"));
     REQUIRE( analisador_lexico->is_decimal("80"));
-  }// SECTION("Decimal Posito")
+  }// SECTION("Decimal Positivo")
+
+  SECTION("Decimal Negativo")
+  {
+    REQUIRE( analisador_lexico->is_decimal("-3"));
+    REQUIRE( analisador_lexico->is_decimal("-1"));
+    REQUIRE( analisador_lexico->is_decimal("-34"));
+  }// SECTION("Decimal Negativo")
+
+  SECTION("Hexadecimal Válido")
+  {
+    REQUIRE( analisador_lexico->is_decimal("0XA3"));
+    REQUIRE( analisador_lexico->is_decimal("0X33"));
+    REQUIRE( analisador_lexico->is_decimal("0X0"));
+  }// SECTION("Hexadecimal Válido")
+
+  SECTION("Hexadecimal Inválido")
+  {
+    REQUIRE_FALSE( analisador_lexico->is_decimal("0X"));
+    REQUIRE_FALSE( analisador_lexico->is_decimal("0X3G"));
+    REQUIRE_FALSE( analisador_lexico->is_decimal("0X96X"));
+  }// SECTION("Hexadecimal Inválido")
 
   SECTION("Somente letras")
   {
@@ -47,7 +68,9 @@ TEST_CASE( "Variável", "[Lexico]" )
     REQUIRE( analisador_lexico->is_variable("Variavel"));
     REQUIRE( analisador_lexico->is_variable("ROTULAO"));
     REQUIRE( analisador_lexico->is_variable("ROTU434lo"));
-    REQUIRE( analisador_lexico->is_variable("Variavel_VALIDO"));
+    REQUIRE( analisador_lexico->is_variable("Variavel_VALIDA"));
+    REQUIRE( analisador_lexico->is_variable("_Variavel_VALIDA"));
+
   } // SECTION("Variável válido")
 
   SECTION("Variável começando com dígito")
@@ -91,6 +114,8 @@ TEST_CASE( "Rótulo", "[Lexico]" )
     REQUIRE(analisador_lexico->is_label("Abac4te:"));
     REQUIRE(analisador_lexico->is_label("Abac_ate:"));
     REQUIRE(analisador_lexico->is_label("Abac_4te:"));
+    REQUIRE(analisador_lexico->is_label("_Abacate:"));
+
 
   } // SECTION("Rótulo válido")
 
@@ -179,3 +204,65 @@ TEST_CASE( "OPCODE", "[Lexico]" )
     REQUIRE_FALSE(analisador_lexico->is_label("Abacat32::"));
   }// SECTION("OPCODE inválido")
 } // TEST_CASE( "OPCODE", "[Lexico]" )
+
+TEST_CASE( "Exceções ", "[Lexico]" )
+{
+  SECTION("Sinal de Soma")
+  {
+    REQUIRE( analisador_lexico->is_symbol("+") );
+    REQUIRE_FALSE( analisador_lexico->is_symbol("PARA+QUE+TER+SOMENTE+UM+SINAL+NA+LINGUAGEM+TODA") );
+  }
+
+  SECTION("Argumentos do COPY")
+  {
+    REQUIRE( analisador_lexico->is_copyargumment("PARAQUE,SOMENTENOCOPY") );
+    REQUIRE( analisador_lexico->is_copyargumment("PARAQUE,3") );
+    REQUIRE( analisador_lexico->is_copyargumment("2,SOMENTENOCOPY") );
+    REQUIRE( analisador_lexico->is_copyargumment("2,3") );
+    REQUIRE_FALSE( analisador_lexico->is_copyargumment("PARA,QUE,SOMENT2ENOCOPY") );
+  }
+} // TEST_CASE( "Exceções ", "[Lexico]" )
+
+TEST_CASE( "Retorna Token", "[Lexico]" )
+{
+  SECTION("Token válido")
+  {
+    REQUIRE(analisador_lexico->tokenize("1")      == "DECIMAL");
+    REQUIRE(analisador_lexico->tokenize("-30")    == "DECIMAL");
+    REQUIRE(analisador_lexico->tokenize("298302") == "DECIMAL");
+    REQUIRE(analisador_lexico->tokenize("0XFFFF") == "DECIMAL");
+
+
+    REQUIRE(analisador_lexico->tokenize(";comentário")  == "COMMENT");
+    REQUIRE(analisador_lexico->tokenize(";PAPO;MA@SSA") == "COMMENT");
+    REQUIRE(analisador_lexico->tokenize(";298302")      == "COMMENT");
+
+    REQUIRE(analisador_lexico->tokenize("Start:")  == "LABEL");
+    REQUIRE(analisador_lexico->tokenize("MEXICO:") == "LABEL");
+    REQUIRE(analisador_lexico->tokenize("CAFE23:") == "LABEL");
+
+    REQUIRE(analisador_lexico->tokenize("VARIAVEL") == "VARIABLE");
+    REQUIRE(analisador_lexico->tokenize("V4R4V3L")  == "VARIABLE");
+    REQUIRE(analisador_lexico->tokenize("POPOPO")   == "VARIABLE");
+
+    REQUIRE(analisador_lexico->tokenize("ADD")  == "OPCODE");
+    REQUIRE(analisador_lexico->tokenize("SUB")  == "OPCODE");
+    REQUIRE(analisador_lexico->tokenize("JMPP") == "OPCODE");
+
+    REQUIRE(analisador_lexico->tokenize("SECTION") == "DIRECTIVE");
+    REQUIRE(analisador_lexico->tokenize("EQU")     == "DIRECTIVE");
+    REQUIRE(analisador_lexico->tokenize("IF")      == "DIRECTIVE");
+
+    REQUIRE(analisador_lexico->tokenize("+") == "SYMBOL");
+    REQUIRE(analisador_lexico->tokenize("CHOCOLATE,PIMENTA")     == "COPYARGS");
+  } // SECTION("Token válido")
+
+  SECTION("Token inválido")
+  {
+    REQUIRE(analisador_lexico->tokenize("1NVALIDO") == "INVALID");
+    REQUIRE(analisador_lexico->tokenize("!NVALIDO") == "INVALID");
+    REQUIRE(analisador_lexico->tokenize("NTA@ONISTA") == "INVALID");
+
+  } // SECTION("Token inválido")
+
+} // TEST_CASE( "Token", "[Lexico]" )
