@@ -18,6 +18,20 @@ TEST_CASE( "Número", "[Lexico]" )
     REQUIRE( analisador_lexico->is_decimal("-34"));
   }// SECTION("Decimal Negativo")
 
+  SECTION("Hexadecimal Válido")
+  {
+    REQUIRE( analisador_lexico->is_decimal("0XA3"));
+    REQUIRE( analisador_lexico->is_decimal("0X33"));
+    REQUIRE( analisador_lexico->is_decimal("0X0"));
+  }// SECTION("Hexadecimal Válido")
+
+  SECTION("Hexadecimal Inválido")
+  {
+    REQUIRE_FALSE( analisador_lexico->is_decimal("0X"));
+    REQUIRE_FALSE( analisador_lexico->is_decimal("0X3G"));
+    REQUIRE_FALSE( analisador_lexico->is_decimal("0X96X"));
+  }// SECTION("Hexadecimal Inválido")
+
   SECTION("Somente letras")
   {
     REQUIRE_FALSE( analisador_lexico->is_decimal("LeTRas"));

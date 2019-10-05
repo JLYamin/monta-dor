@@ -30,16 +30,39 @@ bool Scanner::is_decimal(const string token){
   retorna se é um token válido ou não.
   */
   if( token.empty() ) return false;
+  bool eh_inteiro = false;
+  bool eh_hexadecimal = false;
+
   
   string primeiro_simbolo = token.substr(0, 1);
+  // Primeiro validamos se é inteiro
   string possivel_numero = token;
   if (primeiro_simbolo == "-")
   {
     possivel_numero = possivel_numero.substr(1, possivel_numero.size() - 1);
   }
 
-  return find_if(possivel_numero.begin(), 
+  eh_inteiro = find_if(possivel_numero.begin(), 
       possivel_numero.end(), [](char caractere) { return !isdigit(caractere); }) == possivel_numero.end();
+  
+  // Depois validamos se é hexadecimal
+  if( token.size() > 2 )
+  {
+    string dois_primeiros_simbolos = token.substr(0, 2);
+    if( dois_primeiros_simbolos == "0X")
+    {
+      string possivel_hexadecimal = token.substr(2, token.size() - 2);
+      
+      eh_hexadecimal = find_if(possivel_hexadecimal.begin(), 
+      possivel_hexadecimal.end(), [](char caractere) { return !isxdigit(caractere); }) == possivel_hexadecimal.end();
+    
+    } else {
+
+      eh_hexadecimal = false;
+    }
+  }
+
+  return eh_inteiro || eh_hexadecimal;
 }
 
 bool Scanner::is_variable(const string token)
