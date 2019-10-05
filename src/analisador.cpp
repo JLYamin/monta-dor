@@ -110,7 +110,9 @@ bool Scanner::is_opcode(const string token)
 
 bool Scanner::is_symbol(const string token)
 {
-  return false;
+  if ( token.empty() ) return false;
+  if ( token == "+") return true;
+  else return false;
 }
 
 string Scanner::tokenize(const string token )
