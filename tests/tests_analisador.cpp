@@ -4,12 +4,19 @@ Scanner* analisador_lexico = new Scanner();
 TEST_CASE( "Número", "[Lexico]" ) 
 { 
   //! Testes focados em validar se o analisador léxico consegue reconhecer números
-  SECTION("Decimal Posito")
+  SECTION("Decimal Positivo")
   {
     REQUIRE( analisador_lexico->is_decimal("2"));
     REQUIRE( analisador_lexico->is_decimal("99999"));
     REQUIRE( analisador_lexico->is_decimal("80"));
-  }// SECTION("Decimal Posito")
+  }// SECTION("Decimal Positivo")
+
+  SECTION("Decimal Negativo")
+  {
+    REQUIRE( analisador_lexico->is_decimal("-3"));
+    REQUIRE( analisador_lexico->is_decimal("-1"));
+    REQUIRE( analisador_lexico->is_decimal("-34"));
+  }// SECTION("Decimal Negativo")
 
   SECTION("Somente letras")
   {

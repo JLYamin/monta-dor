@@ -29,8 +29,17 @@ bool Scanner::is_decimal(const string token){
   Função recebe uma string sem espaços dentro e
   retorna se é um token válido ou não.
   */
-  return !token.empty() && find_if(token.begin(), 
-      token.end(), [](char caractere) { return !isdigit(caractere); }) == token.end();
+  if( token.empty() ) return false;
+  
+  string primeiro_simbolo = token.substr(0, 1);
+  string possivel_numero = token;
+  if (primeiro_simbolo == "-")
+  {
+    possivel_numero = possivel_numero.substr(1, possivel_numero.size() - 1);
+  }
+
+  return find_if(possivel_numero.begin(), 
+      possivel_numero.end(), [](char caractere) { return !isdigit(caractere); }) == possivel_numero.end();
 }
 
 bool Scanner::is_variable(const string token)
