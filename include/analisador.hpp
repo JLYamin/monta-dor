@@ -18,6 +18,8 @@ class Scanner
     bool is_label(string);
     bool is_directive(string);
     bool is_opcode(string);
+    bool is_symbol(string);
+
     string tokenize(string);
 
 };

@@ -108,6 +108,11 @@ bool Scanner::is_opcode(const string token)
   }
 }
 
+bool Scanner::is_symbol(const string token)
+{
+  return false;
+}
+
 string Scanner::tokenize(const string token )
 {
   // A ordem das validações é importante para OPCODE, DIRECTIVE e VARIABLE

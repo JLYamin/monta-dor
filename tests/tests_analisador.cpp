@@ -184,6 +184,16 @@ TEST_CASE( "OPCODE", "[Lexico]" )
   }// SECTION("OPCODE inválido")
 } // TEST_CASE( "OPCODE", "[Lexico]" )
 
+TEST_CASE( "Exceções ", "[Lexico]" )
+{
+  SECTION("Sinal de Soma")
+  {
+    REQUIRE( analisador_lexico->is_symbol("+") );
+    REQUIRE_FALSE( analisador_lexico->is_symbol("PARA+QUE+TER+SOMENTE+UM+SINAL+NA+LINGUAGEM+TODA") );
+  }
+
+} // TEST_CASE( "Exceções ", "[Lexico]" )
+
 TEST_CASE( "Retorna Token", "[Lexico]" )
 {
   SECTION("Token válido")
