@@ -27,6 +27,13 @@ class Scanner
 
 };
 
+class Parser
+{   
+    public:
+    ~Parser();
+    bool captura_linha(string);
+};
+
 
 
 

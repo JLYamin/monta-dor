@@ -269,3 +269,12 @@ TEST_CASE( "Retorna Token", "[Lexico]" )
   } // SECTION("Token inválido")
 
 } // TEST_CASE( "Token", "[Lexico]" )
+
+Parser* analisador_sintatico = new Parser();
+TEST_CASE( "Valida linha", "[Sintático]" ) 
+{ 
+  SECTION("Linhas válidas")
+  {
+    REQUIRE(analisador_sintatico->captura_linha("ADD 1 2"));
+  }
+} // TEST_CASE( "Valida linha", "[Sintático]" ) 

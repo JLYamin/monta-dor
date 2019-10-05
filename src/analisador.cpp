@@ -204,3 +204,8 @@ string Scanner::tokenize(const string palavra )
   return "INVALID";
 
 }
+
+bool Parser::captura_linha(const string token)
+{
+  return false;
+}
