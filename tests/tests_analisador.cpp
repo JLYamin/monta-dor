@@ -192,6 +192,14 @@ TEST_CASE( "Exceções ", "[Lexico]" )
     REQUIRE_FALSE( analisador_lexico->is_symbol("PARA+QUE+TER+SOMENTE+UM+SINAL+NA+LINGUAGEM+TODA") );
   }
 
+  SECTION("Argumentos do COPY")
+  {
+    REQUIRE( analisador_lexico->is_copyargumment("PARAQUE,SOMENTENOCOPY") );
+    REQUIRE( analisador_lexico->is_copyargumment("PARAQUE,3") );
+    REQUIRE( analisador_lexico->is_copyargumment("2,SOMENTENOCOPY") );
+    REQUIRE( analisador_lexico->is_copyargumment("2,3") );
+    REQUIRE_FALSE( analisador_lexico->is_copyargumment("PARA,QUE,SOMENT2ENOCOPY") );
+  }
 } // TEST_CASE( "Exceções ", "[Lexico]" )
 
 TEST_CASE( "Retorna Token", "[Lexico]" )
