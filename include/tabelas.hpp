@@ -35,4 +35,7 @@ void addPendency(string name, int value);
 // Verifica se o símbolo já existe na tabela de símbolos
 bool checkSymbol (string name);
 
+// [??] Atualiza o endereço do símbolo na tabela de símbolos
+void updateSymbol (string name, int value);
+
 #endif

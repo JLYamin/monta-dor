@@ -22,7 +22,7 @@ stack<int> SymbolRow::defineSymbol(int a) {
     {
       is_defined = true;
       address = a;
-      cout << "O símbolo '" << symbol << "' foi definido como" << address << endl;
+      cout << "O endereço do símbolo '" << symbol << "' foi definido como " << address << endl;
       return pendencies;
     }
   }
@@ -112,4 +112,20 @@ bool checkSymbol(string name) {
     }
   }
   return false;
+}
+
+// [??] Atualiza o endereço do símbolo na tabela de símbolos
+void updateSymbol(string name, int value) {
+  for (size_t i = 0; i < symbolTable.size(); i++) {
+    if (symbolTable[i].symbol == name) {
+      symbolTable[i].defineSymbol(value);
+      return;
+    }
+  }
+
+  try {
+    throw 1;
+  } catch (int error) {
+    cerr << "[ERRO] updateSymbol: Não foi encontrado o símbolo '" << name << "' na tabela de símbolos" << endl;
+  }
 }
