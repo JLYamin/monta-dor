@@ -20,6 +20,7 @@ class Scanner
     bool is_opcode(        string );
     bool is_symbol(        string );
     bool is_copyargumment( string );
+    bool is_copysubargument( string );
 
 
     string tokenize(string);
