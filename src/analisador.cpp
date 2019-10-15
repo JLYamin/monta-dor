@@ -154,13 +154,41 @@ bool Scanner::is_copyargumment( string palavra )
   size_t coordenada_primeira_virgula = palavra.find(",", 0);
   if( coordenada_primeira_virgula == string::npos ) return false;
 
-  // Se ela existir, validamos se o primeiro argumento é ou um decimal ou uma variável
+  // Se ela existir, primeiro validamos se o primeiro argumento possui um sinal de soma
   string primeiro_argumento = palavra.substr(0, coordenada_primeira_virgula);
-  if( !is_variable(primeiro_argumento) && !is_decimal(primeiro_argumento) ) return false;
+  size_t coordenada_primeira_soma = primeiro_argumento.find("+", 0);
+  if( coordenada_primeira_soma == string::npos ){
+    // Se não possuir operador de soma então
+    // validamos se o primeiro argumento é ou um decimal ou uma variável
+    if( !is_variable(primeiro_argumento) && !is_decimal(primeiro_argumento) ) return false;
 
-  //Se o primeiro for, validamos para o segundo
+  } else {
+    // Caso possua, validamos se o primeiro subargumento é um label e se o segundo é um 
+    // decimal
+      string primeiro_subargumento = primeiro_argumento.substr(0, coordenada_primeira_soma);
+      if ( !is_variable(primeiro_subargumento) ) return false;
+      string segundo_subargumento = primeiro_argumento.substr( coordenada_primeira_soma + 1, palavra.size()-1 );
+      cout << segundo_subargumento << endl;
+      if( !is_decimal(segundo_subargumento) ) return false;
+  }
+  
+
+  // Repetimos o processo para o segundo argumento
   string segundo_argumento = palavra.substr( coordenada_primeira_virgula + 1 , palavra.size()-1 );
-  if( !is_variable(segundo_argumento) && !is_decimal(segundo_argumento) ) return false;
+  size_t coordenada_segunda_soma = segundo_argumento.find("+", 0);
+  if( coordenada_segunda_soma == string::npos ){
+    // Se não possuir operador de soma então
+    // validamos se o segundo argumento é ou um decimal ou uma variável
+    if( !is_variable(segundo_argumento) && !is_decimal(segundo_argumento) ) return false;
+
+  } else {
+    // Caso possua, validamos se o segundo subargumento é um label e se o segundo é um 
+    // decimal
+      string terceiro_subargumento = segundo_argumento.substr(0, coordenada_segunda_soma);
+      if ( !is_variable(terceiro_subargumento) ) return false;
+      string quarto_subargumento = segundo_argumento.substr( coordenada_segunda_soma+1, palavra.size()-1 );
+      if( !is_decimal(quarto_subargumento) ) return false;
+  }
   
   return true;
 }
