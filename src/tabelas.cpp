@@ -8,6 +8,7 @@ SymbolRow::SymbolRow(string s, int a, bool d) {
   symbol = s;
   address = a;
   is_defined = d;
+  pendencies.push(-1);
 }
 
 // Método para ser chamado quando a função for definida
