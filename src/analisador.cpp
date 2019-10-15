@@ -230,6 +230,9 @@ bool Parser::captura_linha(const string linha)
       string palavra = linha.substr(0, )
     }
   }
-
+  // Se for um decimal já imprime direto
+  // se for uma variável verificar se está tabela de símbolos, se não estiver declarada adicionar 
+  // na lista de pendências. Adiciona o endereço, se não tiver, adiciona 0
+  // Depois que validar o código todo validar se todas as pendÊncias foram resolvidas.
   return false;
 }
