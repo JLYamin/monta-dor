@@ -17,18 +17,18 @@ Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasíl
 #### Montador:
   - [ ] Leitura
     - [x] Receber e abrir o arquivo
-    - [ ] Contador de endereços/posição
+    - [ ] Contador de endereços/posição (thiago)
   - [ ] Parser
     - [ ] Detecção das áreas de texto e *data*
-    - [ ] Deteção das linhas
+    - [ ] Detecção das linhas
     - [x] Detecção das instruções
     - [ ] Detecção dos argumentos das instruções
     - [x] Detecção de rótulos (com ou sem enter após)
   - [ ] Tabelas
-    - [ ] Tabela de Instruções para consulta
+    - [x] Tabela de Instruções para consulta
     - [x] Montagem da tabela de símbolos
   - [ ] Detecção de Erros
-    - [ ] Detecção de erros léxicos
+    - [x] Detecção de erros léxicos
     - [ ] Detecção de erros sintáticos
     - [ ] Detecção de erros semânticos
     - [x] Exibição das linhas e classificação dos erros
@@ -48,6 +48,18 @@ Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasíl
  Acho que é isso! Fique com esse gif fofo:
 
  ![Gif fofo](https://media.giphy.com/media/4Zo41lhzKt6iZ8xff9/giphy.gif "Cachorrinhoooo")
+
+### O que cada um vai fazer:
+Thiago
+	- Loop de leitura do arquivo;
+	- Contador de linhas (para a impressão de erros, é só contar os \n);
+	- Contador de endereços (para adição na tabela de símbolos);
+	- Integrar a tabela de símbolos à leitura
+
+JL
+	- Escrita dos arquivos
+	- Arquivo pré-processado
+	- Detecção de erros semânticos
 
 
 ### Instalação
