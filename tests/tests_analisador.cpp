@@ -216,7 +216,10 @@ TEST_CASE( "Exceções ", "[Lexico]" )
   SECTION("Argumentos do COPY")
   {
     REQUIRE( analisador_lexico->is_copyargumment("PARAQUE,SOMENTENOCOPY") );
+    REQUIRE( analisador_lexico->is_copyargumment("PARAQUE+2,SOMENTENOCOPY") );
+    REQUIRE( analisador_lexico->is_copyargumment("PARAQUE,SOMENTENOCOPY+4") );
     REQUIRE( analisador_lexico->is_copyargumment("PARAQUE,3") );
+    REQUIRE( analisador_lexico->is_copyargumment("PARAQUE+2,3") );
     REQUIRE( analisador_lexico->is_copyargumment("2,SOMENTENOCOPY") );
     REQUIRE( analisador_lexico->is_copyargumment("2,3") );
     REQUIRE_FALSE( analisador_lexico->is_copyargumment("PARA,QUE,SOMENT2ENOCOPY") );
