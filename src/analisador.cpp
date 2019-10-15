@@ -3,6 +3,7 @@
 */
 
 #include "analisador.hpp"
+#include "tabelas.hpp"
 
 Scanner::Scanner()
 {
