@@ -217,6 +217,7 @@ string Parser::monta_linha(const string linha)
   //Procuramos o primeiro espaço
   size_t coordenada_primeiro_espaco = linha.find(" ", 0);
   string primeira_palavra;
+  string codigo_objeto;
   // Caso não haja o primeiro espaço, então há uma palavra ou nenhuma
   if( coordenada_primeiro_espaco == string::npos ) 
       { 
@@ -239,9 +240,8 @@ string Parser::monta_linha(const string linha)
     if ( quantidade_argumentos == 0 )
     // Se for um opcode sem argumentos, é o STOP
     {
-      string codigo_objeto = "14";
+      codigo_objeto = "14";
       return codigo_objeto;
-    
     } else if ( quantidade_argumentos == 1 ) {
     // Se for um opcode de somente um argumento, ele aceita operações com variáveis
     // ou com números
@@ -261,18 +261,15 @@ string Parser::monta_linha(const string linha)
 
       if( segundo_token == "VARIABLE" )
       {
-        string codigo_objeto = opcode + " 00";
-        return codigo_objeto;
+        codigo_objeto = opcode + " 00";
       } else if( segundo_token == "DECIMAL" ) {
-        string codigo_objeto = opcode + " " + argumento;
-        return codigo_objeto;
-      } else {
-        return "";
-      }
+        codigo_objeto = opcode + " " + argumento;
+      } 
+      return codigo_objeto;
+
     } else if( quantidade_argumentos == 2 ) {
 
       size_t coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco+1 );
-      string codigo_objeto;
       string argumento; 
 
       if( coordenada_segundo_espaco == string::npos ) 
@@ -282,6 +279,7 @@ string Parser::monta_linha(const string linha)
         argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco-2 );
       }
       string segundo_token = analisador_lexico->tokenize( argumento );
+
       if( segundo_token != "COPYARGS" ) return "";
         size_t coordenada_primeira_virgula = argumento.find(",", 0);
 
@@ -304,6 +302,7 @@ string Parser::monta_linha(const string linha)
         } else if ( segundo_subtoken == "DECIMAL" ) {
           codigo_objeto = codigo_objeto + " " + segundo_subargumento;
         }
+        
         return codigo_objeto;
       }
     return "";
