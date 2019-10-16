@@ -217,14 +217,14 @@ string Parser::monta_linha(const string linha)
   //Procuramos o primeiro espaço
   size_t coordenada_primeiro_espaco = linha.find(" ", 0);
   string primeira_palavra;
-  
+  // Caso não haja o primeiro espaço, então há uma palavra ou nenhuma
   if( coordenada_primeiro_espaco == string::npos ) 
       { 
         primeira_palavra = linha.substr(0, linha.size() );
       } else {
         primeira_palavra = linha.substr(0, coordenada_primeiro_espaco );
       }
-
+  // Validamos a primeira palavra e a partir do token, fazemos diferentes comportamentos
   string primeiro_token = analisador_lexico->tokenize(primeira_palavra);
 
   if( primeiro_token == "INVALID" ) return "";
@@ -241,20 +241,22 @@ string Parser::monta_linha(const string linha)
     {
       string codigo_objeto = "14";
       return codigo_objeto;
-    } else if (quantidade_argumentos == 1)
+    
+    } else if ( quantidade_argumentos == 1 ) {
     // Se for um opcode de somente um argumento, ele aceita operações com variáveis
     // ou com números
-    {
       //Procuramos o segundo espaço
-      size_t coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco);
+      size_t coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco+1);
       string argumento; 
-
+      // Se não houver segundo espaço, buscamos o segundo token como a última palavra
+      // Se houver, é a segunda palavra
       if( coordenada_segundo_espaco == string::npos ) 
       { 
         argumento = linha.substr(coordenada_primeiro_espaco + 1, linha.size()-1 );
       } else {
         argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco-2 );
       }
+      // Dependendo do tipo do TOKEN, a linha é montada de forma diferente
       string segundo_token = analisador_lexico->tokenize(argumento);
 
       if( segundo_token == "VARIABLE" )
@@ -267,7 +269,44 @@ string Parser::monta_linha(const string linha)
       } else {
         return "";
       }
-    }
+    } else if( quantidade_argumentos == 2 ) {
+
+      size_t coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco+1 );
+      string codigo_objeto;
+      string argumento; 
+
+      if( coordenada_segundo_espaco == string::npos ) 
+      { 
+        argumento = linha.substr(coordenada_primeiro_espaco + 1, linha.size()-1 );
+      } else {
+        argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco-2 );
+      }
+      string segundo_token = analisador_lexico->tokenize( argumento );
+      if( segundo_token != "COPYARGS" ) return "";
+        size_t coordenada_primeira_virgula = argumento.find(",", 0);
+
+        string primeiro_subargumento = argumento.substr(0, coordenada_primeira_virgula);
+        string segundo_subargumento = argumento.substr( coordenada_primeira_virgula + 1, argumento.size()-1 ); 
+        
+        string primeiro_subtoken = analisador_lexico->tokenize( primeiro_subargumento );
+        string segundo_subtoken = analisador_lexico->tokenize( segundo_subargumento );
+        
+        if( primeiro_subtoken == "VARIABLE" )
+        {
+          codigo_objeto = opcode + " 00";
+        } else if( primeiro_subtoken == "DECIMAL" ) {
+          codigo_objeto = opcode + " " + primeiro_subargumento;
+        }
+
+        if( segundo_subtoken == "VARIABLE")
+        {
+          codigo_objeto = codigo_objeto + " 00";
+        } else if ( segundo_subtoken == "DECIMAL" ) {
+          codigo_objeto = codigo_objeto + " " + segundo_subargumento;
+        }
+        return codigo_objeto;
+      }
+    return "";
   }
 
   // Se for um decimal já imprime direto

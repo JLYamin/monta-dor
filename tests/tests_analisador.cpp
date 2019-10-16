@@ -299,7 +299,5 @@ TEST_CASE( "Valida linha", "[Sintático]" )
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA") == "9 00 00");
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA+1,OLD_DATA") == "9 01 00");
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA+2") == "9 00 02");
-
-
   }
 } // TEST_CASE( "Valida linha", "[Sintático]" ) 
