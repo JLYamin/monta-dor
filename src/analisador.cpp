@@ -351,6 +351,8 @@ Assembler::~Assembler()
 }
 
 
-string Assembler::monta_texto( string texto ){
-  return "";
+string Assembler::monta_texto( string nome_arquivo )
+{
+  string texto = leitor->carrega_texto( nome_arquivo );
+  return texto;
 }

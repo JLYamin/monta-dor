@@ -1,4 +1,4 @@
-#include "leitura_e_impressao.hpp"
+#include "reader_writer.hpp"
 #ifndef CATCH_H
 #define CATCH_H
 #include "catch.hpp"
@@ -49,7 +49,7 @@ class Assembler
     Assembler();
     ~Assembler();
     Parser* analisador_sintatico;
-    Leitor* leitor;
+    ReaderWriter* leitor;
     string monta_texto( string );
 
 

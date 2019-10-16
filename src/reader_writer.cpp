@@ -2,10 +2,9 @@
 
 */
 
-#include "leitura_e_impressao.hpp"
+#include "reader_writer.hpp"
 
-
-Leitor::Leitor(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
+string ReaderWriter::carrega_texto(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
 {
   ifstream infile (caminho_do_arquivo_completo);
   if (infile) {
@@ -43,16 +42,16 @@ Leitor::Leitor(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
     regex_replace(data, multiplos_espacos_comeco_linha, "");
     regex_replace(data, multiplos_espacos, " ");
     regex_replace(data, multiplos_saltos_linha, "\n");
-
+    return data;
   } else {
-      cout << "Problemas ao ler arquivo";
+    return "";
+    cout << "Problemas ao ler arquivo";
   }
 }
 
 /*
 int main(){
-  /* Main criada para testes manuais
-  Leitor leitura;
+  ReaderWriter leitura;
   cout << leitura.texto_lido;
   return 0;
 }

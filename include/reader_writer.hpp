@@ -5,9 +5,11 @@
 
 using namespace std;
 
-class Leitor
+class ReaderWriter
 {
     public:
+    string carrega_texto(string);
+
+    private:
     string texto_lido;
-    Leitor(string);
 };
