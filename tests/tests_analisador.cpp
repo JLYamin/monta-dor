@@ -277,10 +277,10 @@ TEST_CASE( "Valida linha", "[Sintático]" )
   SECTION("Linhas com opcodes de um argumento")
   {
     REQUIRE( analisador_sintatico->monta_linha("ADD 1") == "1 1");
-    REQUIRE( analisador_sintatico->monta_linha("ADD 1 ;EXTREMADAMENTE") == "1 1");
+    REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL ;CURTO COMENTAR CODIGO PORQUE É UMA BOA PRATICA") == "1 00");
     REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL") == "1 00");
     REQUIRE( analisador_sintatico->monta_linha("SUB VARIAVEL") == "2 00");
-    REQUIRE( analisador_sintatico->monta_linha("MULT 5") == "3 5");
+    REQUIRE( analisador_sintatico->monta_linha("MULT 5 ;COMENTARIO") == "3 5");
     REQUIRE( analisador_sintatico->monta_linha("JMP VARIAVEL") == "5 00");
     REQUIRE( analisador_sintatico->monta_linha("STORE 43") == "11 43");
   } // SECTION("Linhas com opcodes de um argumento")
@@ -297,7 +297,8 @@ TEST_CASE( "Valida linha", "[Sintático]" )
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,2") == "9 00 2");
     REQUIRE( analisador_sintatico->monta_linha("COPY 1,OLD_DATA") == "9 1 00");
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA") == "9 00 00");
-    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA+1,OLD_DATA") == "9 01 00");
-    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA+2") == "9 00 02");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA+1,OLD_DATA") == "9 001 00");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA+2") == "9 00 002");
+
   }
 } // TEST_CASE( "Valida linha", "[Sintático]" ) 

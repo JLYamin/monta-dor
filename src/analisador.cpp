@@ -237,12 +237,9 @@ string Parser::monta_linha(const string linha)
     // O primeiro é o seu código objeto
     string opcode = to_string(dados_opcode[0]);
     int quantidade_argumentos = dados_opcode[1] - 1;
-    if ( quantidade_argumentos == 0 )
-    // Se for um opcode sem argumentos, é o STOP
-    {
-      codigo_objeto = "14";
-      return codigo_objeto;
-    } else if ( quantidade_argumentos == 1 ) {
+    codigo_objeto = opcode;
+
+    if ( quantidade_argumentos > 0 ) {
     // Se for um opcode de somente um argumento, ele aceita operações com variáveis
     // ou com números
       //Procuramos o segundo espaço
@@ -254,33 +251,17 @@ string Parser::monta_linha(const string linha)
       { 
         argumento = linha.substr(coordenada_primeiro_espaco + 1, linha.size()-1 );
       } else {
-        argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco-2 );
+        argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco - coordenada_primeiro_espaco -1 );
       }
       // Dependendo do tipo do TOKEN, a linha é montada de forma diferente
       string segundo_token = analisador_lexico->tokenize(argumento);
 
       if( segundo_token == "VARIABLE" )
       {
-        codigo_objeto = opcode + " 00";
+        codigo_objeto = codigo_objeto + " 00";
       } else if( segundo_token == "DECIMAL" ) {
-        codigo_objeto = opcode + " " + argumento;
-      } 
-      return codigo_objeto;
-
-    } else if( quantidade_argumentos == 2 ) {
-
-      size_t coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco+1 );
-      string argumento; 
-
-      if( coordenada_segundo_espaco == string::npos ) 
-      { 
-        argumento = linha.substr(coordenada_primeiro_espaco + 1, linha.size()-1 );
-      } else {
-        argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco-2 );
-      }
-      string segundo_token = analisador_lexico->tokenize( argumento );
-
-      if( segundo_token != "COPYARGS" ) return "";
+        codigo_objeto = codigo_objeto + " " + argumento;
+      }  else if( segundo_token == "COPYARGS" ) {
         size_t coordenada_primeira_virgula = argumento.find(",", 0);
 
         string primeiro_subargumento = argumento.substr(0, coordenada_primeira_virgula);
@@ -291,9 +272,16 @@ string Parser::monta_linha(const string linha)
         
         if( primeiro_subtoken == "VARIABLE" )
         {
-          codigo_objeto = opcode + " 00";
+          codigo_objeto = codigo_objeto + " 00";
         } else if( primeiro_subtoken == "DECIMAL" ) {
-          codigo_objeto = opcode + " " + primeiro_subargumento;
+          codigo_objeto = codigo_objeto + " " + primeiro_subargumento;
+        } else {
+          // Se não for nem variável nem decimal, mas ainda for um copyarg válido 
+          // então deve haver um símbolo de soma separando um rotulo e um decimal
+          size_t coordenada_simbolo_soma = primeiro_subargumento.find("+", 0);
+          string rotulo = primeiro_subargumento.substr(0, coordenada_simbolo_soma);
+          string decimal = primeiro_subargumento.substr( coordenada_simbolo_soma + 1, primeiro_subargumento.size()-1 );
+          codigo_objeto = codigo_objeto + " 00" + decimal;
         }
 
         if( segundo_subtoken == "VARIABLE")
@@ -301,11 +289,15 @@ string Parser::monta_linha(const string linha)
           codigo_objeto = codigo_objeto + " 00";
         } else if ( segundo_subtoken == "DECIMAL" ) {
           codigo_objeto = codigo_objeto + " " + segundo_subargumento;
+        } else {
+          size_t coordenada_simbolo_soma = segundo_subargumento.find("+", 0);
+          string rotulo = segundo_subargumento.substr(0, coordenada_simbolo_soma);
+          string decimal = segundo_subargumento.substr( coordenada_simbolo_soma + 1, segundo_subargumento.size()-1 );
+          codigo_objeto = codigo_objeto + " 00" + decimal;
         }
-        
-        return codigo_objeto;
       }
-    return "";
+    }
+    return codigo_objeto;
   }
 
   // Se for um decimal já imprime direto
