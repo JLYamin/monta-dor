@@ -11,7 +11,6 @@ class Scanner
     unordered_map< string, vector<int> > tabela_opcodes;
     unordered_map< string, int > tabela_directives;
     Scanner( );
-    ~Scanner();
     bool is_decimal(       string );
     bool is_variable(      string );
     bool is_comment(       string );
@@ -40,6 +39,18 @@ class Parser
     int contagem_endereco;
     string monta_argumento(const string );
     string monta_subargumento(const string );
+
+
+};
+
+class Assembler
+{   
+    public:
+    Assembler();
+    ~Assembler();
+    Parser* analisador_sintatico;
+    Leitor* leitor;
+    string monta_texto( string );
 
 
 };

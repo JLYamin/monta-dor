@@ -2,6 +2,7 @@
 
 Scanner* analisador_lexico = new Scanner();
 Parser* analisador_sintatico = new Parser();
+Assembler* montador = new Assembler();
 
 TEST_CASE( "Número", "[Lexico]" ) 
 { 
@@ -299,6 +300,7 @@ TEST_CASE( "Valida linha", "[Sintático]" )
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA") == "9 00 00");
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA+1,OLD_DATA") == "9 001 00");
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA+2") == "9 00 002");
+  } // SECTION( "Monta linha com opcodes com dois argumentos")
 
   }
 
@@ -315,3 +317,11 @@ TEST_CASE( "Valida linha", "[Sintático]" )
   }
   
 } // TEST_CASE( "Valida linha", "[Sintático]" ) 
+
+TEST_CASE( "Contagem", "[Semântico]" ) 
+{ 
+  SECTION( "Conta linhas, endereços e percorre o arquivo")
+  {
+    REQUIRE( analisador_sintatico->monta_linha("test_files/teste_simpes.asm") == "10 9");
+  } //SECTION( "Conta linhas, endereços e percorre o arquivo")
+}

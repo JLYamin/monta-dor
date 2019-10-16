@@ -217,6 +217,11 @@ int Parser::get_ultimo_endereco()
 }
 
 
+Parser::~Parser()
+{
+  delete(analisador_lexico);
+}
+
 string Parser::monta_subargumento(const string  subargumento )
 {
   size_t coordenada_simbolo_soma = subargumento.find("+", 0);
@@ -333,4 +338,19 @@ string Parser::monta_linha(const string linha)
   // se for uma variável verificar se está tabela de símbolos, se não estiver declarada adicionar 
   // na lista de pendências. Adiciona o endereço, se não tiver, adiciona 0
   // Depois que validar o código todo validar se todas as pendÊncias foram resolvidas.
+}
+
+Assembler::Assembler()
+{
+  analisador_sintatico = new Parser();
+}
+
+Assembler::~Assembler()
+{
+  delete(analisador_sintatico);
+}
+
+
+string Assembler::monta_texto( string texto ){
+  return "";
 }
