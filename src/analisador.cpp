@@ -210,6 +210,59 @@ Parser::Parser()
   analisador_lexico = new Scanner();
 }
 
+string Parser::monta_subargumento(const string  subargumento )
+{
+  size_t coordenada_simbolo_soma = subargumento.find("+", 0);
+  string codigo_subargumento;
+  string rotulo = subargumento.substr(0, coordenada_simbolo_soma);
+  string decimal = subargumento.substr( coordenada_simbolo_soma + 1, subargumento.size()-1 );
+  codigo_subargumento = " 00" + decimal;
+  return codigo_subargumento;
+}
+
+string Parser::monta_argumento(const string argumento )
+{
+  string codigo_objeto_argumento;
+  string token_argumento = analisador_lexico->tokenize(argumento);
+
+  if( token_argumento == "VARIABLE" )
+  // Dependendo do tipo do TOKEN, a linha é montada de forma diferente
+  {
+    codigo_objeto_argumento = " 00";
+  } else if( token_argumento == "DECIMAL" ) {
+    codigo_objeto_argumento = " " + argumento;
+  }  else if( token_argumento == "COPYARGS" ) {
+    size_t coordenada_primeira_virgula = argumento.find(",", 0);
+
+    string primeiro_subargumento = argumento.substr( 0, coordenada_primeira_virgula );
+    string segundo_subargumento = argumento.substr( coordenada_primeira_virgula + 1, argumento.size()-1 ); 
+    
+    string primeiro_subtoken = analisador_lexico->tokenize( primeiro_subargumento );
+    string segundo_subtoken = analisador_lexico->tokenize( segundo_subargumento );
+    
+    if( primeiro_subtoken == "VARIABLE" )
+    {
+      codigo_objeto_argumento = " 00";
+    } else if( primeiro_subtoken == "DECIMAL" ) {
+      codigo_objeto_argumento = " " + primeiro_subargumento;
+    } else {
+      // Se não for nem variável nem decimal, mas ainda for um copyarg válido 
+      // então deve haver um símbolo de soma separando um rotulo e um decimal
+      codigo_objeto_argumento = monta_subargumento( primeiro_subargumento );
+    }
+
+    if( segundo_subtoken == "VARIABLE")
+    {
+      codigo_objeto_argumento = codigo_objeto_argumento + " 00";
+    } else if ( segundo_subtoken == "DECIMAL" ) {
+      codigo_objeto_argumento = codigo_objeto_argumento + " " + segundo_subargumento;
+    } else {
+      codigo_objeto_argumento = codigo_objeto_argumento + monta_subargumento( segundo_subargumento );
+    }
+  }
+  return codigo_objeto_argumento;
+}
+
 string Parser::monta_linha(const string linha)
 { 
   if( linha.empty() ) return "";
@@ -253,49 +306,7 @@ string Parser::monta_linha(const string linha)
       } else {
         argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco - coordenada_primeiro_espaco -1 );
       }
-      // Dependendo do tipo do TOKEN, a linha é montada de forma diferente
-      string segundo_token = analisador_lexico->tokenize(argumento);
-
-      if( segundo_token == "VARIABLE" )
-      {
-        codigo_objeto = codigo_objeto + " 00";
-      } else if( segundo_token == "DECIMAL" ) {
-        codigo_objeto = codigo_objeto + " " + argumento;
-      }  else if( segundo_token == "COPYARGS" ) {
-        size_t coordenada_primeira_virgula = argumento.find(",", 0);
-
-        string primeiro_subargumento = argumento.substr(0, coordenada_primeira_virgula);
-        string segundo_subargumento = argumento.substr( coordenada_primeira_virgula + 1, argumento.size()-1 ); 
-        
-        string primeiro_subtoken = analisador_lexico->tokenize( primeiro_subargumento );
-        string segundo_subtoken = analisador_lexico->tokenize( segundo_subargumento );
-        
-        if( primeiro_subtoken == "VARIABLE" )
-        {
-          codigo_objeto = codigo_objeto + " 00";
-        } else if( primeiro_subtoken == "DECIMAL" ) {
-          codigo_objeto = codigo_objeto + " " + primeiro_subargumento;
-        } else {
-          // Se não for nem variável nem decimal, mas ainda for um copyarg válido 
-          // então deve haver um símbolo de soma separando um rotulo e um decimal
-          size_t coordenada_simbolo_soma = primeiro_subargumento.find("+", 0);
-          string rotulo = primeiro_subargumento.substr(0, coordenada_simbolo_soma);
-          string decimal = primeiro_subargumento.substr( coordenada_simbolo_soma + 1, primeiro_subargumento.size()-1 );
-          codigo_objeto = codigo_objeto + " 00" + decimal;
-        }
-
-        if( segundo_subtoken == "VARIABLE")
-        {
-          codigo_objeto = codigo_objeto + " 00";
-        } else if ( segundo_subtoken == "DECIMAL" ) {
-          codigo_objeto = codigo_objeto + " " + segundo_subargumento;
-        } else {
-          size_t coordenada_simbolo_soma = segundo_subargumento.find("+", 0);
-          string rotulo = segundo_subargumento.substr(0, coordenada_simbolo_soma);
-          string decimal = segundo_subargumento.substr( coordenada_simbolo_soma + 1, segundo_subargumento.size()-1 );
-          codigo_objeto = codigo_objeto + " 00" + decimal;
-        }
-      }
+      codigo_objeto = codigo_objeto + monta_argumento(argumento);
     }
     return codigo_objeto;
   }

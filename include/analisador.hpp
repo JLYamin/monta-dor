@@ -34,6 +34,12 @@ class Parser
     ~Parser();
     Scanner* analisador_lexico;
     string monta_linha(string);
+
+    private:
+    string monta_argumento(const string );
+    string monta_subargumento(const string );
+
+
 };
 
 
