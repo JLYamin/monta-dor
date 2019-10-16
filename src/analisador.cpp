@@ -210,7 +210,7 @@ Parser::Parser()
   analisador_lexico = new Scanner();
 }
 
-string Parser::captura_linha(const string linha)
+string Parser::monta_linha(const string linha)
 { 
   if( linha.empty() ) return "";
 
@@ -227,6 +227,7 @@ string Parser::captura_linha(const string linha)
     vector<int> dados_opcode = analisador_lexico->tabela_opcodes[primeira_palavra];
     // O segundo inteiro dos dados da tabela de opcodes é o tamanho da instrução
     // uma instrução sempre tem o tamanho do mnemônico somado ao número de argumentos
+    string opcode = to_string(dados_opcode[0]);
     int quantidade_argumentos = dados_opcode[1] - 1;
     if (quantidade_argumentos == 1)
     {
@@ -242,8 +243,13 @@ string Parser::captura_linha(const string linha)
       }
 
       string segundo_token = analisador_lexico->tokenize(argumento);
-      if( segundo_token == "VARIABLE" || segundo_token == "DECIMAL" ) {
-        return "";
+      if( segundo_token == "VARIABLE" )
+      {
+        string codigo_objeto = opcode + " 00";
+        return codigo_objeto;
+      } else if( segundo_token == "DECIMAL" ) {
+        string codigo_objeto = opcode + " " + argumento;
+        return codigo_objeto;
       } else {
         return "";
       }

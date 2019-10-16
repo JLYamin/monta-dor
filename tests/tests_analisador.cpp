@@ -276,11 +276,11 @@ TEST_CASE( "Valida linha", "[Sintático]" )
 { 
   SECTION("Linhas com opcodes de um argumento")
   {
-    REQUIRE( analisador_sintatico->captura_linha("ADD 1") == "1 1");
-    REQUIRE( analisador_sintatico->captura_linha("ADD VARIAVEL") == "1 00");
-    REQUIRE( analisador_sintatico->captura_linha("SUB VARIAVEL") == "2 00");
-    REQUIRE( analisador_sintatico->captura_linha("MULT 5") == "3 5");
-    REQUIRE( analisador_sintatico->captura_linha("JMP VARIAVEL") == "5 00");
-    REQUIRE( analisador_sintatico->captura_linha("STORE 43") == "11 43");
+    REQUIRE( analisador_sintatico->monta_linha("ADD 1") == "1 1");
+    REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL") == "1 00");
+    REQUIRE( analisador_sintatico->monta_linha("SUB VARIAVEL") == "2 00");
+    REQUIRE( analisador_sintatico->monta_linha("MULT 5") == "3 5");
+    REQUIRE( analisador_sintatico->monta_linha("JMP VARIAVEL") == "5 00");
+    REQUIRE( analisador_sintatico->monta_linha("STORE 43") == "11 43");
   }
 } // TEST_CASE( "Valida linha", "[Sintático]" ) 
