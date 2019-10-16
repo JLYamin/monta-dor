@@ -216,9 +216,15 @@ string Parser::monta_linha(const string linha)
 
   //Procuramos o primeiro espaço
   size_t coordenada_primeiro_espaco = linha.find(" ", 0);
-  if( coordenada_primeiro_espaco == string::npos ) return "";
+  string primeira_palavra;
+  
+  if( coordenada_primeiro_espaco == string::npos ) 
+      { 
+        primeira_palavra = linha.substr(0, linha.size() );
+      } else {
+        primeira_palavra = linha.substr(0, coordenada_primeiro_espaco );
+      }
 
-  string primeira_palavra = linha.substr(0, coordenada_primeiro_espaco);
   string primeiro_token = analisador_lexico->tokenize(primeira_palavra);
 
   if( primeiro_token == "INVALID" ) return "";
@@ -227,9 +233,17 @@ string Parser::monta_linha(const string linha)
     vector<int> dados_opcode = analisador_lexico->tabela_opcodes[primeira_palavra];
     // O segundo inteiro dos dados da tabela de opcodes é o tamanho da instrução
     // uma instrução sempre tem o tamanho do mnemônico somado ao número de argumentos
+    // O primeiro é o seu código objeto
     string opcode = to_string(dados_opcode[0]);
     int quantidade_argumentos = dados_opcode[1] - 1;
-    if (quantidade_argumentos == 1)
+    if ( quantidade_argumentos == 0 )
+    // Se for um opcode sem argumentos, é o STOP
+    {
+      string codigo_objeto = "14";
+      return codigo_objeto;
+    } else if (quantidade_argumentos == 1)
+    // Se for um opcode de somente um argumento, ele aceita operações com variáveis
+    // ou com números
     {
       //Procuramos o segundo espaço
       size_t coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco);
@@ -239,10 +253,10 @@ string Parser::monta_linha(const string linha)
       { 
         argumento = linha.substr(coordenada_primeiro_espaco + 1, linha.size()-1 );
       } else {
-        argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco );
+        argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco-2 );
       }
-
       string segundo_token = analisador_lexico->tokenize(argumento);
+
       if( segundo_token == "VARIABLE" )
       {
         string codigo_objeto = opcode + " 00";
