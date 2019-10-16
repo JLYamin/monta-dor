@@ -283,11 +283,23 @@ TEST_CASE( "Valida linha", "[Sintático]" )
     REQUIRE( analisador_sintatico->monta_linha("MULT 5") == "3 5");
     REQUIRE( analisador_sintatico->monta_linha("JMP VARIAVEL") == "5 00");
     REQUIRE( analisador_sintatico->monta_linha("STORE 43") == "11 43");
-  }
+  } // SECTION("Linhas com opcodes de um argumento")
 
   SECTION( "Monta linha com opcodes sem argumentos")
   {
     REQUIRE( analisador_sintatico->monta_linha("STOP") == "14");
     REQUIRE( analisador_sintatico->monta_linha("STOP ;COMENTARIO") == "14");
+  } // SECTION("Linhas com opcodes de um argumento")
+
+  SECTION( "Monta linha com opcodes com dois argumentos")
+  {
+    REQUIRE( analisador_sintatico->monta_linha("COPY 1,2") == "9 1 2");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,2") == "9 00 2");
+    REQUIRE( analisador_sintatico->monta_linha("COPY 1,OLD_DATA") == "9 1 00");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA") == "9 00 00");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA+1,OLD_DATA") == "9 01 00");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA+2") == "9 00 02");
+
+
   }
 } // TEST_CASE( "Valida linha", "[Sintático]" ) 
