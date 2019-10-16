@@ -33,7 +33,7 @@ class Parser
     Parser();
     ~Parser();
     Scanner* analisador_lexico;
-    bool captura_linha(string);
+    string captura_linha(string);
 };
 
 

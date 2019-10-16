@@ -210,18 +210,18 @@ Parser::Parser()
   analisador_lexico = new Scanner();
 }
 
-bool Parser::captura_linha(const string linha)
+string Parser::captura_linha(const string linha)
 { 
-  if( linha.empty() ) return false;
+  if( linha.empty() ) return "";
 
   //Procuramos o primeiro espaço
   size_t coordenada_primeiro_espaco = linha.find(" ", 0);
-  if( coordenada_primeiro_espaco == string::npos ) return false;
+  if( coordenada_primeiro_espaco == string::npos ) return "";
 
   string primeira_palavra = linha.substr(0, coordenada_primeiro_espaco);
   string primeiro_token = analisador_lexico->tokenize(primeira_palavra);
 
-  if( primeiro_token == "INVALID" ) return false;
+  if( primeiro_token == "INVALID" ) return "";
   if( primeiro_token == "OPCODE")
   {
     vector<int> dados_opcode = analisador_lexico->tabela_opcodes[primeira_palavra];
@@ -243,9 +243,9 @@ bool Parser::captura_linha(const string linha)
 
       string segundo_token = analisador_lexico->tokenize(argumento);
       if( segundo_token == "VARIABLE" || segundo_token == "DECIMAL" ) {
-        return true;
+        return "";
       } else {
-        return false;
+        return "";
       }
     }
   }
@@ -254,5 +254,5 @@ bool Parser::captura_linha(const string linha)
   // se for uma variável verificar se está tabela de símbolos, se não estiver declarada adicionar 
   // na lista de pendências. Adiciona o endereço, se não tiver, adiciona 0
   // Depois que validar o código todo validar se todas as pendÊncias foram resolvidas.
-  return false;
+  return "";
 }
