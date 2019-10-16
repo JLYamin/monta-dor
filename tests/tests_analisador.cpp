@@ -272,11 +272,19 @@ TEST_CASE( "Retorna Token", "[Lexico]" )
 
 } // TEST_CASE( "Token", "[Lexico]" )
 
-Parser* analisador_sintatico = new Parser();
 TEST_CASE( "Valida linha", "[Sintático]" ) 
 { 
-  SECTION("Linhas válidas")
+  SECTION("Linhas com opcodes de um argumento")
   {
-    REQUIRE(analisador_sintatico->captura_linha("ADD 1 2"));
+    REQUIRE(analisador_sintatico->captura_linha("ADD 1"));
+    REQUIRE(analisador_sintatico->captura_linha("ADD VARIAVEL"));
+    REQUIRE(analisador_sintatico->captura_linha("SUB VARIAVEL"));
+    REQUIRE(analisador_sintatico->captura_linha("MULT 5"));
+    REQUIRE(analisador_sintatico->captura_linha("JMP VARIAVEL"));
+    REQUIRE(analisador_sintatico->captura_linha("STORE 43"));
+
+
+
+
   }
 } // TEST_CASE( "Valida linha", "[Sintático]" ) 

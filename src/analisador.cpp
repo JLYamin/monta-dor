@@ -225,11 +225,31 @@ bool Parser::captura_linha(const string linha)
   if( primeiro_token == "OPCODE")
   {
     vector<int> dados_opcode = analisador_lexico->tabela_opcodes[primeira_palavra];
-    int quantidade_argumentos = dados_opcode[1];
-    for( ; quantidade_argumentos > 0; quantidade_argumentos--) {
-      string palavra = linha.substr(0, )
+    // O segundo inteiro dos dados da tabela de opcodes é o tamanho da instrução
+    // uma instrução sempre tem o tamanho do mnemônico somado ao número de argumentos
+    int quantidade_argumentos = dados_opcode[1] - 1;
+    if (quantidade_argumentos == 1)
+    {
+      //Procuramos o segundo espaço
+      size_t coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco);
+      string argumento; 
+
+      if( coordenada_segundo_espaco == string::npos ) 
+      { 
+        argumento = linha.substr(coordenada_primeiro_espaco + 1, linha.size()-1 );
+      } else {
+        argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco );
+      }
+
+      string segundo_token = analisador_lexico->tokenize(argumento);
+      if( segundo_token == "VARIABLE" || segundo_token == "DECIMAL" ) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
+
   // Se for um decimal já imprime direto
   // se for uma variável verificar se está tabela de símbolos, se não estiver declarada adicionar 
   // na lista de pendências. Adiciona o endereço, se não tiver, adiciona 0
