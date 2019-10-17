@@ -34,8 +34,10 @@ class Parser
     ~Parser();
     Scanner* analisador_lexico;
     string monta_linha(string);
+    int get_ultimo_endereco();
 
     private:
+    int contagem_endereco;
     string monta_argumento(const string );
     string monta_subargumento(const string );
 

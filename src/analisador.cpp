@@ -208,6 +208,7 @@ string Scanner::tokenize(const string palavra )
 Parser::Parser()
 {
   analisador_lexico = new Scanner();
+  contagem_endereco = 0;
 }
 
 string Parser::monta_subargumento(const string  subargumento )
@@ -289,6 +290,7 @@ string Parser::monta_linha(const string linha)
     // uma instrução sempre tem o tamanho do mnemônico somado ao número de argumentos
     // O primeiro é o seu código objeto
     string opcode = to_string(dados_opcode[0]);
+    contagem_endereco += dados_opcode[1];
     int quantidade_argumentos = dados_opcode[1] - 1;
     codigo_objeto = opcode;
 
