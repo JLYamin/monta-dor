@@ -1,37 +1,37 @@
 # monta-dor
 Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasília
 
-### Alunos: 
+### Alunos:
 - João Lucas Azevedo Yamin Rodrigues da Cunha
 - Thiago Luis Rodrigues Pinho
-        
+
 **Link da especificação do trabalho:** [1º Trabalho Prático - Aprender UnB](https://aprender.ead.unb.br/pluginfile.php/724430/mod_resource/content/0/Trabalho1.pdf)
 
-## Regrinhas: 
+## Regrinhas:
 - Vamos seguir os rolês de git e criar branches para as funcionalidades que estaremos fazendo;
 - É isto, acabou as regras não consigo pensar em outras.
 
-## To do list: 
+## To do list:
 
 (*Baseado nas funcionalidades que a princípio acho que existirão*)
 #### Montador:
   - [ ] Leitura
     - [x] Receber e abrir o arquivo
-    - [ ] Contador de endereços/posição
+    - [ ] Contador de endereços/posição (thiago)
   - [ ] Parser
     - [ ] Detecção das áreas de texto e *data*
-    - [ ] Deteção das linhas
+    - [ ] Detecção das linhas
     - [x] Detecção das instruções
     - [ ] Detecção dos argumentos das instruções
     - [x] Detecção de rótulos (com ou sem enter após)
   - [ ] Tabelas
-    - [ ] Tabela de Instruções para consulta
-    - [ ] Montagem da tabela de símbolos
+    - [x] Tabela de Instruções para consulta
+    - [x] Montagem da tabela de símbolos
   - [ ] Detecção de Erros
-    - [ ] Detecção de erros léxicos
+    - [x] Detecção de erros léxicos
     - [ ] Detecção de erros sintáticos
     - [ ] Detecção de erros semânticos
-    - [ ] Exibição das linhas e classificação dos erros
+    - [x] Exibição das linhas e classificação dos erros
   - [ ] Código de Máquina
     - [ ] Adicionar o *opcode*
     - [ ] Resolver as pendências dos endereços da Tabela de Símbolos
@@ -44,10 +44,22 @@ Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasíl
    - [ ] Identificar e executar as instruções
    - [ ] Exibir o conteúdo do acumulador ao executar uma instrução
    - [ ] Exibir o endereço e conteúdo de endereços modificados pela instrução
-   
+
  Acho que é isso! Fique com esse gif fofo:
- 
+
  ![Gif fofo](https://media.giphy.com/media/4Zo41lhzKt6iZ8xff9/giphy.gif "Cachorrinhoooo")
+
+### O que cada um vai fazer:
+Thiago
+	- Loop de leitura do arquivo;
+	- Contador de linhas (para a impressão de erros, é só contar os \n);
+	- Contador de endereços (para adição na tabela de símbolos);
+	- Integrar a tabela de símbolos à leitura
+
+JL
+	- Escrita dos arquivos
+	- Arquivo pré-processado
+	- Detecção de erros semânticos
 
 
 ### Instalação
@@ -76,5 +88,5 @@ Se você quiser ver os testes antes de executá-los:
 ```
 Ou pode somente rodar os testes:
 ```
-./all_tester 
+./all_tester
 ```
