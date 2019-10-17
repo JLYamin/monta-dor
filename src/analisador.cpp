@@ -287,7 +287,6 @@ string Parser::monta_linha(const string linha)
       }
   // Validamos a primeira palavra e a partir do token, fazemos diferentes comportamentos
   string primeiro_token = analisador_lexico->tokenize(primeira_palavra);
-
   if( primeiro_token == "INVALID" ) return "";
   if( primeiro_token == "OPCODE")
   {
@@ -315,13 +314,23 @@ string Parser::monta_linha(const string linha)
         argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco - coordenada_primeiro_espaco -1 );
       }
       codigo_objeto = codigo_objeto + monta_argumento(argumento);
+    } 
+  } else if( primeiro_token == "LABEL" ){
+    // Se for um label, adiciona o endereço a tabela de símbolos e avalia o resto da linha normalmente
+    string resto_linha;
+    if( coordenada_primeiro_espaco == string::npos ) 
+      { 
+        resto_linha = "";
+      } else {
+        resto_linha = linha.substr(coordenada_primeiro_espaco + 1, linha.size()-coordenada_primeiro_espaco-1);
+      }
+    
+    codigo_objeto = monta_linha(resto_linha);
     }
-    return codigo_objeto;
-  }
+  return codigo_objeto;
 
   // Se for um decimal já imprime direto
   // se for uma variável verificar se está tabela de símbolos, se não estiver declarada adicionar 
   // na lista de pendências. Adiciona o endereço, se não tiver, adiciona 0
   // Depois que validar o código todo validar se todas as pendÊncias foram resolvidas.
-  return "";
 }

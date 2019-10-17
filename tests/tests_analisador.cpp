@@ -304,7 +304,9 @@ TEST_CASE( "Valida linha", "[Sintático]" )
 
   SECTION( "Monta linha com rótulo no começo")
   {
-    REQUIRE( analisador_sintatico->monta_linha("L1: DIV DOIS") == "1 00");
+    REQUIRE( analisador_sintatico->monta_linha("L1: DIV DOIS") == "4 00");
+    REQUIRE( analisador_sintatico->monta_linha("L1:") == "");
+
   }
   
 } // TEST_CASE( "Valida linha", "[Sintático]" ) 
