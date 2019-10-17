@@ -4,6 +4,7 @@ Scanner* analisador_lexico = new Scanner();
 Parser* analisador_sintatico = new Parser();
 Assembler* montador = new Assembler();
 
+
 TEST_CASE( "Número", "[Lexico]" ) 
 { 
   //! Testes focados em validar se o analisador léxico consegue reconhecer números
@@ -321,5 +322,7 @@ TEST_CASE( "Contagem", "[Semântico]" )
   SECTION( "Monta arquivo .asm para codigo objeto")
   {
     REQUIRE( montador->monta_texto("test_files/teste_simpes.asm") == "11 00 3 00 11 00 10 00 2 00 11 00");
+    REQUIRE( montador->monta_texto("test_files/teste_sections_e_tabela_simbolos.asm") == "11 00 3 00 11 00 10 00 2 00 11 00");
+
   } //SECTION( "Conta linhas, endereços e percorre o arquivo")
 }

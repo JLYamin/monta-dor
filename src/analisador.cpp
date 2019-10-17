@@ -5,6 +5,8 @@
 #include "analisador.hpp"
 #include "tabelas.hpp"
 
+// Tabela de símbolos
+
 Scanner::Scanner()
 {
   /* Na tabela de OPCODES, o primeiro termo é a chave, o segundo é um vetor de inteiro com 
@@ -223,25 +225,32 @@ Parser::~Parser()
   delete(analisador_lexico);
 }
 
-string Parser::monta_subargumento(const string  subargumento )
+string Parser::monta_subargumento(const string  subargumento, const int contagem_argumentos )
 {
   size_t coordenada_simbolo_soma = subargumento.find("+", 0);
   string codigo_subargumento;
   string rotulo = subargumento.substr(0, coordenada_simbolo_soma);
   string decimal = subargumento.substr( coordenada_simbolo_soma + 1, subargumento.size()-1 );
   codigo_subargumento = " 00" + decimal;
+  if( !checkSymbol( subargumento) ) addSymbol(subargumento, 0, false);
+      addPendency(subargumento, get_ultimo_endereco() + contagem_argumentos );
   return codigo_subargumento;
 }
 
 string Parser::monta_argumento(const string argumento )
 {
   string codigo_objeto_argumento;
+  int endereco_atual = get_ultimo_endereco();
   string token_argumento = analisador_lexico->tokenize(argumento);
 
   if( token_argumento == "VARIABLE" )
   // Dependendo do tipo do TOKEN, a linha é montada de forma diferente
   {
+    // Se for uma variável e não tiver sido adicionada à tabela, adiciona ela como não definida
+    if( !checkSymbol(argumento) ) addSymbol(argumento, 0, false);
     codigo_objeto_argumento = " 00";
+    // Adicionamos então o símbolo à tabela de pendências para depois trocarmos pelo valor correto
+    addPendency(argumento, endereco_atual + 1);
   } else if( token_argumento == "DECIMAL" ) {
     codigo_objeto_argumento = " " + argumento;
   }  else if( token_argumento == "COPYARGS" ) {
@@ -255,22 +264,26 @@ string Parser::monta_argumento(const string argumento )
     
     if( primeiro_subtoken == "VARIABLE" )
     {
+      if( !checkSymbol(primeiro_subargumento) ) addSymbol(primeiro_subargumento, 0, false);
+      addPendency(primeiro_subargumento, endereco_atual + 1);
       codigo_objeto_argumento = " 00";
     } else if( primeiro_subtoken == "DECIMAL" ) {
       codigo_objeto_argumento = " " + primeiro_subargumento;
     } else {
       // Se não for nem variável nem decimal, mas ainda for um copyarg válido 
       // então deve haver um símbolo de soma separando um rotulo e um decimal
-      codigo_objeto_argumento = monta_subargumento( primeiro_subargumento );
+      codigo_objeto_argumento = monta_subargumento( primeiro_subargumento, 1 );
     }
 
     if( segundo_subtoken == "VARIABLE")
     {
+      if( !checkSymbol(segundo_subargumento) ) addSymbol(segundo_subargumento, 0, false);
+      addPendency(segundo_subargumento, endereco_atual + 2);
       codigo_objeto_argumento = codigo_objeto_argumento + " 00";
     } else if ( segundo_subtoken == "DECIMAL" ) {
       codigo_objeto_argumento = codigo_objeto_argumento + " " + segundo_subargumento;
     } else {
-      codigo_objeto_argumento = codigo_objeto_argumento + monta_subargumento( segundo_subargumento );
+      codigo_objeto_argumento = codigo_objeto_argumento + monta_subargumento( segundo_subargumento, 2 );
     }
   }
   return codigo_objeto_argumento;
@@ -301,7 +314,6 @@ string Parser::monta_linha(const string linha)
     // uma instrução sempre tem o tamanho do mnemônico somado ao número de argumentos
     // O primeiro é o seu código objeto
     string opcode = to_string(dados_opcode[0]);
-    contagem_endereco += dados_opcode[1];
     int quantidade_argumentos = dados_opcode[1] - 1;
     codigo_objeto = opcode;
 
@@ -319,11 +331,19 @@ string Parser::monta_linha(const string linha)
       } else {
         argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco - coordenada_primeiro_espaco -1 );
       }
-      codigo_objeto = codigo_objeto + monta_argumento(argumento);
+      codigo_objeto = codigo_objeto + monta_argumento( argumento );
     } 
-  } else if( primeiro_token == "LABEL" ){
+    contagem_endereco += dados_opcode[1];
+  } else if( primeiro_token == "LABEL" ) {
     // Se for um label, adiciona o endereço a tabela de símbolos e avalia o resto da linha normalmente
     string resto_linha;
+    if( !checkSymbol( primeira_palavra ) )
+    {
+      addSymbol( primeira_palavra, get_ultimo_endereco() , true );
+    } else {
+      updateSymbol( primeira_palavra, get_ultimo_endereco() );
+    }
+    
     if( coordenada_primeiro_espaco == string::npos ) 
       { 
         resto_linha = "";

@@ -37,8 +37,8 @@ class Parser
 
     private:
     int contagem_endereco;
-    string monta_argumento(const string );
-    string monta_subargumento(const string );
+    string monta_argumento( const string );
+    string monta_subargumento( const string, const int );
 
 
 };
