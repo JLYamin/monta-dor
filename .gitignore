@@ -32,3 +32,7 @@
 *.exe
 *.out
 *.app
+
+src/obj/
+
+all_tester

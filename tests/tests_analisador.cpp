@@ -1,6 +1,9 @@
 #include "analisador.hpp"
 
 Scanner* analisador_lexico = new Scanner();
+Parser* analisador_sintatico = new Parser();
+Assembler* montador = new Assembler();
+
 TEST_CASE( "Número", "[Lexico]" ) 
 { 
   //! Testes focados em validar se o analisador léxico consegue reconhecer números
@@ -216,7 +219,10 @@ TEST_CASE( "Exceções ", "[Lexico]" )
   SECTION("Argumentos do COPY")
   {
     REQUIRE( analisador_lexico->is_copyargumment("PARAQUE,SOMENTENOCOPY") );
+    REQUIRE( analisador_lexico->is_copyargumment("PARAQUE+2,SOMENTENOCOPY") );
+    REQUIRE( analisador_lexico->is_copyargumment("PARAQUE,SOMENTENOCOPY+4") );
     REQUIRE( analisador_lexico->is_copyargumment("PARAQUE,3") );
+    REQUIRE( analisador_lexico->is_copyargumment("PARAQUE+2,3") );
     REQUIRE( analisador_lexico->is_copyargumment("2,SOMENTENOCOPY") );
     REQUIRE( analisador_lexico->is_copyargumment("2,3") );
     REQUIRE_FALSE( analisador_lexico->is_copyargumment("PARA,QUE,SOMENT2ENOCOPY") );
@@ -266,3 +272,54 @@ TEST_CASE( "Retorna Token", "[Lexico]" )
   } // SECTION("Token inválido")
 
 } // TEST_CASE( "Token", "[Lexico]" )
+
+TEST_CASE( "Valida linha", "[Sintático]" ) 
+{ 
+  SECTION("Linhas com opcodes de um argumento")
+  {
+    REQUIRE( analisador_sintatico->monta_linha("ADD 1") == "1 1");
+    REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL ;CURTO COMENTAR CODIGO PORQUE É UMA BOA PRATICA") == "1 00");
+    REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL") == "1 00");
+    REQUIRE( analisador_sintatico->monta_linha("SUB VARIAVEL") == "2 00");
+    REQUIRE( analisador_sintatico->monta_linha("MULT 5 ;COMENTARIO") == "3 5");
+    REQUIRE( analisador_sintatico->monta_linha("JMP VARIAVEL") == "5 00");
+    REQUIRE( analisador_sintatico->monta_linha("STORE 43") == "11 43");
+  } // SECTION("Linhas com opcodes de um argumento")
+
+  SECTION( "Monta linha com opcodes sem argumentos")
+  {
+    REQUIRE( analisador_sintatico->monta_linha("STOP") == "14");
+    REQUIRE( analisador_sintatico->monta_linha("STOP ;COMENTARIO") == "14");
+  } // SECTION("Linhas com opcodes de um argumento")
+
+  SECTION( "Monta linha com opcodes com dois argumentos")
+  {
+    REQUIRE( analisador_sintatico->monta_linha("COPY 1,2") == "9 1 2");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,2") == "9 00 2");
+    REQUIRE( analisador_sintatico->monta_linha("COPY 1,OLD_DATA") == "9 1 00");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA") == "9 00 00");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA+1,OLD_DATA") == "9 001 00");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA+2") == "9 00 002");
+  } // SECTION( "Monta linha com opcodes com dois argumentos")
+
+  SECTION( "Monta linha com rótulo no começo" )
+  {
+    REQUIRE( analisador_sintatico->monta_linha("L1: DIV DOIS") == "4 00");
+    REQUIRE( analisador_sintatico->monta_linha("L1:") == "");
+  }
+
+  SECTION( "Monta linha com section no começo" )
+  {
+    REQUIRE( analisador_sintatico->monta_linha("SECTION TEXT") == "");
+    REQUIRE( analisador_sintatico->monta_linha("SECTION DATA") == "");
+  }
+  
+} // TEST_CASE( "Valida linha", "[Sintático]" ) 
+
+TEST_CASE( "Contagem", "[Semântico]" ) 
+{ 
+  SECTION( "Monta arquivo .asm para codigo objeto")
+  {
+    REQUIRE( montador->monta_texto("test_files/teste_simpes.asm") == "11 00 3 00 11 00 10 00 2 00 11 00");
+  } //SECTION( "Conta linhas, endereços e percorre o arquivo")
+}

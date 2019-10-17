@@ -30,6 +30,7 @@ stack<int> SymbolRow::defineSymbol(int a) {
   catch (int error)
   {
     cerr << "[ERRO] SymbolRow::defineSymbol: O símbolo '" << symbol << "' já está definido.\n";
+    return pendencies;
   }
 }
 
@@ -57,6 +58,7 @@ int SymbolRow::removePendency() {
   catch (int error)
   {
     cerr << "[ERRO] SymbolRow::removePendency: A pilha do símbolo '" << symbol << "' está vazia.\n";
+    return return_value;
   }
 }
 

@@ -10,13 +10,13 @@ TDIR	=./tests
 
 LIBS	=-lm
 	
-_DEPS	= leitura_e_impressao.hpp analisador.hpp tabelas.hpp
+_DEPS	= reader_writer.hpp analisador.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_TOBJ = leitura_e_impressao.o analisador.o tabelas.o tests_main.o tests_analisador.o
+_TOBJ = reader_writer.o analisador.o tests_main.o tests_analisador.o
 TOBJ = $(patsubst %,$(ODIR)/%,$(_TOBJ))
 
-_OBJ = leitura_e_impressao.o analisador.o tabelas.o main.o
+_OBJ = reader_writer.o analisador.o main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
