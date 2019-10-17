@@ -302,11 +302,16 @@ TEST_CASE( "Valida linha", "[Sintático]" )
 
   }
 
-  SECTION( "Monta linha com rótulo no começo")
+  SECTION( "Monta linha com rótulo no começo" )
   {
     REQUIRE( analisador_sintatico->monta_linha("L1: DIV DOIS") == "4 00");
     REQUIRE( analisador_sintatico->monta_linha("L1:") == "");
+  }
 
+  SECTION( "Monta linha com section no começo" )
+  {
+    REQUIRE( analisador_sintatico->monta_linha("SECTION TEXT") == "");
+    REQUIRE( analisador_sintatico->monta_linha("SECTION DATA") == "");
   }
   
 } // TEST_CASE( "Valida linha", "[Sintático]" ) 
