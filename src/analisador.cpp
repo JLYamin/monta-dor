@@ -211,6 +211,12 @@ Parser::Parser()
   contagem_endereco = 0;
 }
 
+int Parser::get_ultimo_endereco()
+{
+  return contagem_endereco;
+}
+
+
 string Parser::monta_subargumento(const string  subargumento )
 {
   size_t coordenada_simbolo_soma = subargumento.find("+", 0);
