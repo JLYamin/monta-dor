@@ -320,8 +320,8 @@ TEST_CASE( "Valida linha", "[Sintático]" )
 
 TEST_CASE( "Contagem", "[Semântico]" ) 
 { 
-  SECTION( "Conta linhas, endereços e percorre o arquivo")
+  SECTION( "Monta arquivo .asm para codigo objeto")
   {
-    REQUIRE( montador->monta_texto("test_files/teste_simpes.asm") == "6 12");
+    REQUIRE( montador->monta_texto("test_files/teste_simpes.asm") == "11 00 3 00 11 00 10 00 2 00 11 00");
   } //SECTION( "Conta linhas, endereços e percorre o arquivo")
 }

@@ -364,6 +364,5 @@ string Assembler::monta_texto( string nome_arquivo )
   }
   // Remove o último espaço
   codigo_objeto = codigo_objeto.substr(0, codigo_objeto.size()-1);
-  codigo_objeto = to_string(contagem_linha) + " " + to_string(analisador_sintatico->get_ultimo_endereco() );
   return codigo_objeto;
 }
