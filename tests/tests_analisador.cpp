@@ -302,8 +302,6 @@ TEST_CASE( "Valida linha", "[Sintático]" )
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA+2") == "9 00 002");
   } // SECTION( "Monta linha com opcodes com dois argumentos")
 
-  }
-
   SECTION( "Monta linha com rótulo no começo" )
   {
     REQUIRE( analisador_sintatico->monta_linha("L1: DIV DOIS") == "4 00");
