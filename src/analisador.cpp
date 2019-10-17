@@ -354,5 +354,15 @@ Assembler::~Assembler()
 string Assembler::monta_texto( string nome_arquivo )
 {
   string texto = leitor->carrega_texto( nome_arquivo );
-  return texto;
+  string codigo_objeto = "";
+  int contagem_linha = 0;
+  istringstream iss(texto);
+
+  for (string linha; getline(iss, linha); contagem_linha += 1, codigo_objeto = codigo_objeto + " ")
+  {
+    codigo_objeto = codigo_objeto + analisador_sintatico->monta_linha(linha);
+  }
+  codigo_objeto = codigo_objeto.substr(0, codigo_objeto.size()-1);
+  
+  return codigo_objeto;
 }

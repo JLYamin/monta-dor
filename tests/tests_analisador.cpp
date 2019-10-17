@@ -322,6 +322,6 @@ TEST_CASE( "Contagem", "[Semântico]" )
 { 
   SECTION( "Conta linhas, endereços e percorre o arquivo")
   {
-    REQUIRE( analisador_sintatico->monta_linha("test_files/teste_simpes.asm") == "6 12");
+    REQUIRE( montador->monta_texto("test_files/teste_simpes.asm") == "6 12");
   } //SECTION( "Conta linhas, endereços e percorre o arquivo")
 }

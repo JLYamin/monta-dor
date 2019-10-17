@@ -7,41 +7,34 @@
 string ReaderWriter::carrega_texto(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
 {
   ifstream infile (caminho_do_arquivo_completo);
+  string data;
+
   if (infile) {
-    string data;
     // open a file in read mode.
     
-    cout << "Reading from the file" << endl; 
-    infile >> data; 
-
     infile.seekg (0, infile.end);
     int length = infile.tellg();
     infile.seekg (0, infile.beg);
 
     char * buffer = new char [length];
 
-    std::cout << "Reading " << length << " characters... ";
     // read data as a block:
     infile.read (buffer,length);
-
-    cout << "Arquivo lido com sucesso";
-    cout << buffer;
-    
     infile.close();
+
+    data = buffer;
 
     // ...buffer contains the entire file...
 
-    delete[] buffer;
-    
     transform(data.begin(), data.end(), data.begin(), ::toupper);
 
     regex multiplos_espacos_comeco_linha("^([ ]{2,}|[\t])");
     regex multiplos_espacos("([ ]{2,}|[\t])");
     regex multiplos_saltos_linha("(\n+)");
 
-    regex_replace(data, multiplos_espacos_comeco_linha, "");
-    regex_replace(data, multiplos_espacos, " ");
-    regex_replace(data, multiplos_saltos_linha, "\n");
+    data = regex_replace(data, multiplos_espacos_comeco_linha, "");
+    data = regex_replace(data, multiplos_espacos, " ");
+    data = regex_replace(data, multiplos_saltos_linha, "\n");
     return data;
   } else {
     return "";
