@@ -337,12 +337,7 @@ string Parser::monta_linha(const string linha)
   } else if( primeiro_token == "LABEL" ) {
     // Se for um label, adiciona o endereço a tabela de símbolos e avalia o resto da linha normalmente
     string resto_linha;
-    if( !checkSymbol( primeira_palavra ) )
-    {
-      addSymbol( primeira_palavra, get_ultimo_endereco() , true );
-    } else {
-      updateSymbol( primeira_palavra, get_ultimo_endereco() );
-    }
+    
     
     if( coordenada_primeiro_espaco == string::npos ) 
       { 
@@ -352,7 +347,23 @@ string Parser::monta_linha(const string linha)
       }
     
     codigo_objeto = monta_linha(resto_linha);
+  } else if( primeiro_token == "DIRECTIVE") {
+    // Caso seja uma diretiva, após o pré-processamento ela pode ser uma SECTION, um CONST ou um SPACE
+    if( primeira_palavra == "CONST" )
+    {
+      size_t coordenada_segundo_espaco = linha.find(" ", 0);
+      string segunda_palavra, segundo_token;
+
+      if( coordenada_segundo_espaco == string::npos ) return ""; //  HOUVE UM ERRO, DEVERIA TER AO MENOS UM ARGUMENTO
+
+      segunda_palavra = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco - coordenada_primeiro_espaco - 1);
+      // Caso exista uma segunda palavra, ela deve ser obrigatoriamente um decimal
+      segundo_token = analisador_lexico->tokenize( segunda_palavra );
+      if( segundo_token != "DECIMAL" ) return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+      if( checkSymbol())
     }
+  }
+
   return codigo_objeto;
 
   // Se for um decimal já imprime direto
