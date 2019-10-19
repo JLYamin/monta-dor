@@ -54,7 +54,7 @@ class Assembler
     ~Assembler();
     Parser* analisador_sintatico;
     ReaderWriter* leitor;
-    string monta_texto( string );
+    string monta_texto( string, string );
 
 
 };

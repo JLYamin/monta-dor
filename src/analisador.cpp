@@ -450,9 +450,9 @@ Assembler::~Assembler()
 }
 
 
-string Assembler::monta_texto( string nome_arquivo )
+string Assembler::monta_texto( string nome_arquivo, string nome_pasta )
 {
-  string nome_pasta = "Entradas ASM/";
+  
   string codigo_objeto = "";
   string codigo_objeto_linha, nome_rotulo, codigo_pendente, codigo_corrigido, texto_preprocessado;
   int endereco_pendencia, coordenada_equ, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
