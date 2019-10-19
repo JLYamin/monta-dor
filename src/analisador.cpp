@@ -5,6 +5,8 @@
 #include "analisador.hpp"
 #include "tabelas.hpp"
 
+extern vector<SymbolRow> symbolTable;
+
 // Tabela de símbolos
 
 Scanner::Scanner()
@@ -232,8 +234,8 @@ string Parser::monta_subargumento(const string  subargumento, const int contagem
   string rotulo = subargumento.substr(0, coordenada_simbolo_soma);
   string decimal = subargumento.substr( coordenada_simbolo_soma + 1, subargumento.size()-1 );
   codigo_subargumento = " 00" + decimal;
-  if( !checkSymbol( subargumento) ) addSymbol(subargumento, 0, false);
-      addPendency(subargumento, get_ultimo_endereco() + contagem_argumentos );
+  if( !checkSymbol( rotulo) ) addSymbol(rotulo, 0, false);
+      addPendency(rotulo, get_ultimo_endereco() + contagem_argumentos );
   return codigo_subargumento;
 }
 
@@ -342,25 +344,74 @@ string Parser::monta_linha(const string linha)
     if( coordenada_primeiro_espaco == string::npos ) 
       { 
         resto_linha = "";
-      } else {
+    } else {
         resto_linha = linha.substr(coordenada_primeiro_espaco + 1, linha.size()-coordenada_primeiro_espaco-1);
-      }
-    
-    codigo_objeto = monta_linha(resto_linha);
-  } else if( primeiro_token == "DIRECTIVE") {
+    }
+    size_t coordenada_segundo_espaco = resto_linha.find(" ", 0);
+    string segunda_palavra, segundo_token;
+    segunda_palavra = resto_linha.substr(0, coordenada_segundo_espaco);
+    segundo_token = analisador_lexico->tokenize( segunda_palavra );
+
+    if( segundo_token == "DIRECTIVE") {
     // Caso seja uma diretiva, após o pré-processamento ela pode ser uma SECTION, um CONST ou um SPACE
-    if( primeira_palavra == "CONST" )
-    {
-      size_t coordenada_segundo_espaco = linha.find(" ", 0);
-      string segunda_palavra, segundo_token;
+        size_t coordenada_terceiro_espaco = resto_linha.find(" ", coordenada_segundo_espaco+1 );
+        string terceira_palavra, terceiro_token;
 
-      if( coordenada_segundo_espaco == string::npos ) return ""; //  HOUVE UM ERRO, DEVERIA TER AO MENOS UM ARGUMENTO
+      if( segunda_palavra == "CONST" )
+      {
+        if( coordenada_terceiro_espaco == string::npos ) 
+        {
+          terceira_palavra = resto_linha.substr(coordenada_segundo_espaco + 1, resto_linha.size() - coordenada_segundo_espaco - 1);
+        } else {
+          terceira_palavra = resto_linha.substr(coordenada_segundo_espaco + 1, coordenada_terceiro_espaco - coordenada_segundo_espaco - 1);
+        }
+        // Caso exista uma segunda palavra, ela deve ser obrigatoriamente um decimal
+        terceiro_token = analisador_lexico->tokenize( terceira_palavra );
 
-      segunda_palavra = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco - coordenada_primeiro_espaco - 1);
-      // Caso exista uma segunda palavra, ela deve ser obrigatoriamente um decimal
-      segundo_token = analisador_lexico->tokenize( segunda_palavra );
-      if( segundo_token != "DECIMAL" ) return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
-      if( checkSymbol())
+        if( terceiro_token != "DECIMAL" ) return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+
+        if( checkSymbol( primeira_palavra ) )
+        // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
+        {
+          updateSymbol( primeira_palavra, get_ultimo_endereco() );
+        } else {
+        // Se não o símbolo é adicionado a tabela já definido
+          addSymbol( primeira_palavra, get_ultimo_endereco(), true );
+        }
+        codigo_objeto = terceira_palavra;
+      } else if( segunda_palavra == "SPACE") {
+      // Se for um SPACE devemos verificar se há um argumento e alocar isso em memória
+        if(coordenada_terceiro_espaco == string::npos )
+        // Se não há argumento, aloca-se somente um espaço
+        {
+          if( checkSymbol( primeira_palavra ) )
+          // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
+          {
+          updateSymbol(primeira_palavra, get_ultimo_endereco() );
+          } else {
+          // Se não o símbolo é adicionado a tabela já definido
+          addSymbol( primeira_palavra, get_ultimo_endereco(), true );
+          }
+        } else {
+          terceira_palavra = resto_linha.substr(coordenada_segundo_espaco + 1, coordenada_terceiro_espaco - coordenada_segundo_espaco - 1);
+          // Caso exista uma segunda palavra, ela deve ser obrigatoriamente um decimal
+          terceiro_token = analisador_lexico->tokenize( terceira_palavra );
+
+          if( terceiro_token != "DECIMAL" ) return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+
+          if( checkSymbol( primeira_palavra ) )
+          // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
+          {
+            updateSymbol(primeira_palavra, get_ultimo_endereco() );
+          } else {
+          // Se não o símbolo é adicionado a tabela já definido
+            addSymbol( primeira_palavra, get_ultimo_endereco(), true );
+          }
+        } 
+        codigo_objeto = "00";
+      }
+    } else {
+    codigo_objeto = monta_linha(resto_linha);
     }
   }
 
@@ -387,14 +438,25 @@ string Assembler::monta_texto( string nome_arquivo )
 {
   string texto = leitor->carrega_texto( nome_arquivo );
   string codigo_objeto = "";
+  string codigo_objeto_linha;
   int contagem_linha = 0;
   istringstream iss(texto);
 
-  for (string linha; getline(iss, linha); contagem_linha += 1, codigo_objeto = codigo_objeto + " ")
-  {
-    codigo_objeto = codigo_objeto + analisador_sintatico->monta_linha(linha);
+  for (string linha; getline(iss, linha); contagem_linha += 1)
+  { 
+    codigo_objeto_linha = analisador_sintatico->monta_linha(linha);
+    if( codigo_objeto_linha != "") 
+    {
+      codigo_objeto = codigo_objeto + codigo_objeto_linha + " ";
+    }
   }
   // Remove o último espaço
   codigo_objeto = codigo_objeto.substr(0, codigo_objeto.size()-1);
+
+  // Depois precisamos resolver as pendências
+  for(unsigned int i = 0; i < symbolTable.size(); i++ )
+  {
+
+  }
   return codigo_objeto;
 }

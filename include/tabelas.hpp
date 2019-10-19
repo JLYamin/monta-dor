@@ -9,6 +9,7 @@
 
 using namespace std;
 
+
 // Classe para a linha da tabela de símbolos
 class SymbolRow {
 public:

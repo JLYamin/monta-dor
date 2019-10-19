@@ -3,6 +3,7 @@
 // Tabela de símbolos
 vector<SymbolRow> symbolTable;
 
+
 // Construtores da linha da tabela de símbolos
 SymbolRow::SymbolRow(string s, int a, bool d) {
   symbol = s;
