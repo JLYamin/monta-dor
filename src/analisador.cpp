@@ -452,19 +452,20 @@ Assembler::~Assembler()
 
 string Assembler::monta_texto( string nome_arquivo )
 {
-  string texto = leitor->carrega_texto( nome_arquivo );
+  string nome_pasta = "Entradas ASM/";
   string codigo_objeto = "";
   string codigo_objeto_linha, nome_rotulo, codigo_pendente, codigo_corrigido, texto_preprocessado;
   int endereco_pendencia, coordenada_equ, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
   vector<int> indice_enderecos;
 
+  string texto = leitor->carrega_texto( nome_pasta+nome_arquivo );
   coordenada_equ = texto.find("EQU", 0);
   if( coordenada_equ == string::npos ){
     texto_preprocessado = texto;
   } else {
     texto_preprocessado = ifProcessor(texto);
   }
-  cout << texto_preprocessado << endl;
+  createFilePre(texto_preprocessado, nome_arquivo );
   istringstream iss(texto_preprocessado);
 
   symbolTable.clear();
@@ -509,5 +510,7 @@ string Assembler::monta_texto( string nome_arquivo )
       } while( endereco_pendencia != -1 );
     }
   }
+  createFileObj( codigo_objeto, nome_arquivo );
+
   return codigo_objeto;
 }

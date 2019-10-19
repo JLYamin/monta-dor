@@ -1,4 +1,5 @@
 #include "reader_writer.hpp"
+#include "escritor.hpp"
 #include "preprocessador.hpp"
 #ifndef CATCH_H
 #define CATCH_H
