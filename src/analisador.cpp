@@ -86,6 +86,11 @@ bool Scanner::is_variable(const string palavra )
   return true;  
 }
 
+bool Scanner::is_variable_with_decimal(const string palavra )
+{
+  return false;
+}
+
 bool Scanner::is_comment(const string palavra )
 {
     if( palavra.empty() ) {

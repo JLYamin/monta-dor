@@ -15,6 +15,7 @@ class Scanner
     Scanner( );
     bool is_decimal(       string );
     bool is_variable(      string );
+    bool is_variable_with_decimal( string );
     bool is_comment(       string );
     bool is_label(         string );
     bool is_directive(     string );
