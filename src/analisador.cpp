@@ -239,7 +239,12 @@ string Parser::monta_subargumento(const string  subargumento, const int contagem
   string codigo_subargumento;
   string rotulo = subargumento.substr(0, coordenada_simbolo_soma);
   string decimal = subargumento.substr( coordenada_simbolo_soma + 1, subargumento.size()-1 );
-  codigo_subargumento = " 00" + decimal;
+  if( stoi(decimal) >= 10 )
+  {
+    codigo_subargumento = " " + decimal;
+  } else {
+    codigo_subargumento = " 0" + decimal;
+  }
   if( !checkSymbol( rotulo) ) addSymbol(rotulo, 0, false);
       addPendency(rotulo, get_ultimo_endereco() + contagem_argumentos );
   return codigo_subargumento;
@@ -378,7 +383,7 @@ string Parser::monta_linha(const string linha)
         // Caso exista uma segunda palavra, ela deve ser obrigatoriamente um decimal
         terceiro_token = analisador_lexico->tokenize( terceira_palavra );
 
-        if( terceiro_token != "DECIMAL" ) return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+        if( terceiro_token != "DECIMAL" || terceiro_token == "INVALID" ) return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
 
         if( checkSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1)  ) )
         // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
@@ -388,39 +393,48 @@ string Parser::monta_linha(const string linha)
         // Se não o símbolo é adicionado a tabela já definido
           addSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco(), true );
         }
-        codigo_objeto = terceira_palavra;
+        codigo_objeto = codigo_objeto + terceira_palavra;
         contagem_endereco += 1;
       } else if( segunda_palavra == "SPACE") {
       // Se for um SPACE devemos verificar se há um argumento e alocar isso em memória
-        if(coordenada_terceiro_espaco == string::npos )
-        // Se não há argumento, aloca-se somente um espaço
+        if(coordenada_segundo_espaco == string::npos )
         {
+        // Se não há argumento, aloca-se somente um espaço
           if( checkSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1)  ) )
           // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
           {
-          updateSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco() );
+            updateSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco() );
           } else {
           // Se não o símbolo é adicionado a tabela já definido
-          addSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco(), true );
+            addSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco(), true );
           }
+          terceira_palavra = to_string(1);
         } else {
           terceira_palavra = resto_linha.substr(coordenada_segundo_espaco + 1, coordenada_terceiro_espaco - coordenada_segundo_espaco - 1);
           // Caso exista uma segunda palavra, ela deve ser obrigatoriamente um decimal
           terceiro_token = analisador_lexico->tokenize( terceira_palavra );
 
-          if( terceiro_token != "DECIMAL" ) return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+          if( terceiro_token != "DECIMAL" || terceiro_token == "INVALID") return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
 
           if( checkSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1)  ) )
           // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
           {
-            updateSymbol(primeira_palavra, get_ultimo_endereco() );
+            updateSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1), get_ultimo_endereco() );
           } else {
           // Se não o símbolo é adicionado a tabela já definido
             addSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco(), true );
           }
         } 
-        contagem_endereco += 1;
-        codigo_objeto = codigo_objeto + "00";
+        int memoria_alocada = stoi(terceira_palavra);
+        for(int i = memoria_alocada; i > 0; i--)
+        {
+          contagem_endereco += 1;
+          codigo_objeto = codigo_objeto + " 00";
+          if(i > 0)
+          {
+            codigo_objeto += " ";
+          }
+        }
       }
     } else {
       if( !checkSymbol( primeira_palavra ) )
@@ -459,6 +473,7 @@ string Assembler::monta_texto( string nome_arquivo, string nome_pasta )
   string codigo_objeto = "";
   string codigo_objeto_linha, nome_rotulo, codigo_pendente, codigo_corrigido, texto_preprocessado;
   int endereco_pendencia, coordenada_equ, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
+  int tamanho_codigo_pendente;
   vector<int> indice_enderecos;
 
   string texto = leitor->carrega_texto( nome_pasta+nome_arquivo );
@@ -482,8 +497,15 @@ string Assembler::monta_texto( string nome_arquivo, string nome_pasta )
       // Armazenamos então o índice do endereço
     }
   }
+  
+  //Trata o código para eliminar duplo espaçamento
+  regex multiplos_espacos("([\t ]+)");
+  
+  codigo_objeto = regex_replace(codigo_objeto, multiplos_espacos, " ");
+  
   // Remove o último espaço
   codigo_objeto = codigo_objeto.substr(0, codigo_objeto.size()-1);
+  
   indice_enderecos.push_back(0);
   for(unsigned int i = 0; i < codigo_objeto.length(); ++i) 
   {
@@ -507,9 +529,13 @@ string Assembler::monta_texto( string nome_arquivo, string nome_pasta )
         indice_final_codigo_objeto = indice_enderecos[endereco_pendencia+1];
 
         if( endereco_pendencia == -1 ) break;
-
-        codigo_corrigido = to_string(symbolTable[i].address);
-        codigo_objeto.replace(indice_inicio_codigo_objeto+1, indice_final_codigo_objeto - indice_inicio_codigo_objeto - 1, codigo_corrigido);
+        codigo_pendente = codigo_objeto.substr(indice_inicio_codigo_objeto+1, indice_final_codigo_objeto - indice_inicio_codigo_objeto - 1);
+        tamanho_codigo_pendente = codigo_pendente.size();
+        int incremento = stoi(codigo_pendente);
+  
+  
+        codigo_corrigido = to_string(symbolTable[i].address + incremento);
+        codigo_objeto.replace(indice_inicio_codigo_objeto+1, tamanho_codigo_pendente, codigo_corrigido);
       } while( endereco_pendencia != -1 );
     }
   }
