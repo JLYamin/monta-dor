@@ -204,6 +204,7 @@ string Scanner::tokenize(const string palavra )
   
   if ( is_symbol(        palavra ) )    return "SYMBOL";
   if ( is_copyargumment( palavra ) )    return "COPYARGS";
+  if ( is_variable_plus_decimal( palavra) ) return "VARIABLEPLUS";
 
   // Se não for um palavra conhecido, ele é inválido
   return "INVALID";

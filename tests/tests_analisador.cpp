@@ -240,6 +240,7 @@ TEST_CASE( "Exceções ", "[Lexico]" )
     REQUIRE( analisador_lexico->is_copyargumment("2,3") );
     REQUIRE_FALSE( analisador_lexico->is_copyargumment("PARA,QUE,SOMENT2ENOCOPY") );
   }
+
 } // TEST_CASE( "Exceções ", "[Lexico]" )
 
 TEST_CASE( "Retorna Token", "[Lexico]" )
@@ -274,6 +275,9 @@ TEST_CASE( "Retorna Token", "[Lexico]" )
 
     REQUIRE(analisador_lexico->tokenize("+") == "SYMBOL");
     REQUIRE(analisador_lexico->tokenize("CHOCOLATE,PIMENTA")     == "COPYARGS");
+
+    REQUIRE( analisador_lexico->tokenize("VARIAVEL+3"  ) == "VARIABLEPLUS");
+    REQUIRE( analisador_lexico->tokenize("VARIAVEL+21"  ) == "VARIABLEPLUS");
   } // SECTION("Token válido")
 
   SECTION("Token inválido")
