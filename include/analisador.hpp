@@ -34,6 +34,7 @@ class Parser
     Scanner* analisador_lexico;
     string monta_linha(string);
     int get_ultimo_endereco();
+    void reset_endereco();
 
     private:
     vector<int> indice_enderecos;

@@ -221,6 +221,11 @@ int Parser::get_ultimo_endereco()
   return contagem_endereco;
 }
 
+void Parser::reset_endereco()
+{
+  contagem_endereco = 0;
+}
+
 
 Parser::~Parser()
 {
@@ -254,9 +259,6 @@ string Parser::monta_argumento(const string argumento )
     // Adicionamos então o símbolo à tabela de pendências para depois trocarmos pelo valor correto
     if(!checkSymbol(argumento)) addSymbol(argumento, endereco_atual+1, false);
     addPendency(argumento, endereco_atual + 1);
-    if(argumento == "VARIAVEL"){
-      cout << 
-    }
   } else if( token_argumento == "DECIMAL" ) {
     codigo_objeto_argumento = " " + argumento;
   }  else if( token_argumento == "COPYARGS" ) {
@@ -270,8 +272,8 @@ string Parser::monta_argumento(const string argumento )
     
     if( primeiro_subtoken == "VARIABLE" )
     {
-      //if( !checkSymbol(primeiro_subargumento) ) addSymbol(primeiro_subargumento, 0, false);
-      //addPendency(primeiro_subargumento, endereco_atual + 1);
+      if( !checkSymbol(primeiro_subargumento) ) addSymbol(primeiro_subargumento, 0, false);
+      addPendency(primeiro_subargumento, endereco_atual + 1);
       codigo_objeto_argumento = " 00";
     } else if( primeiro_subtoken == "DECIMAL" ) {
       codigo_objeto_argumento = " " + primeiro_subargumento;
@@ -340,6 +342,7 @@ string Parser::monta_linha(const string linha)
       codigo_objeto = codigo_objeto + monta_argumento( argumento );
     } 
     contagem_endereco += dados_opcode[1];
+
   } else if( primeiro_token == "LABEL" ) {
     // Se for um label, adiciona o endereço a tabela de símbolos e avalia o resto da linha normalmente
     string resto_linha;
@@ -374,27 +377,28 @@ string Parser::monta_linha(const string linha)
 
         if( terceiro_token != "DECIMAL" ) return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
 
-        if( checkSymbol( primeira_palavra ) )
+        if( checkSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1)  ) )
         // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
         {
-          updateSymbol( primeira_palavra, get_ultimo_endereco() );
+          updateSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco() );
         } else {
         // Se não o símbolo é adicionado a tabela já definido
-          addSymbol( primeira_palavra, get_ultimo_endereco(), true );
+          addSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco(), true );
         }
         codigo_objeto = terceira_palavra;
+        contagem_endereco += 1;
       } else if( segunda_palavra == "SPACE") {
       // Se for um SPACE devemos verificar se há um argumento e alocar isso em memória
         if(coordenada_terceiro_espaco == string::npos )
         // Se não há argumento, aloca-se somente um espaço
         {
-          if( checkSymbol( primeira_palavra ) )
+          if( checkSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1)  ) )
           // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
           {
-          updateSymbol(primeira_palavra, get_ultimo_endereco() );
+          updateSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco() );
           } else {
           // Se não o símbolo é adicionado a tabela já definido
-          addSymbol( primeira_palavra, get_ultimo_endereco(), true );
+          addSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco(), true );
           }
         } else {
           terceira_palavra = resto_linha.substr(coordenada_segundo_espaco + 1, coordenada_terceiro_espaco - coordenada_segundo_espaco - 1);
@@ -403,20 +407,26 @@ string Parser::monta_linha(const string linha)
 
           if( terceiro_token != "DECIMAL" ) return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
 
-          if( checkSymbol( primeira_palavra ) )
+          if( checkSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1)  ) )
           // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
           {
-            //updateSymbol(primeira_palavra, get_ultimo_endereco() );
+            updateSymbol(primeira_palavra, get_ultimo_endereco() );
           } else {
           // Se não o símbolo é adicionado a tabela já definido
-            addSymbol( primeira_palavra, get_ultimo_endereco(), true );
+            addSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco(), true );
           }
         } 
-        codigo_objeto = "00";
+        contagem_endereco += 1;
+        codigo_objeto = codigo_objeto + "00";
       }
     } else {
-      if( !checkSymbol( primeira_palavra ) )  addSymbol( primeira_palavra, get_ultimo_endereco(), false );
-          
+      if( !checkSymbol( primeira_palavra ) )
+      {
+        addSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1), get_ultimo_endereco(), true );
+      } else {
+        cout << "Erro" << endl; // UM ERRO OCORREU, DUAS DEFINIÇÕES DO MESMO ROTULO
+      } 
+      
       codigo_objeto = codigo_objeto + monta_linha(resto_linha);
     }
   }
@@ -444,12 +454,13 @@ string Assembler::monta_texto( string nome_arquivo )
 {
   string texto = leitor->carrega_texto( nome_arquivo );
   string codigo_objeto = "";
-  string codigo_objeto_linha, nome_rotulo, codigo_pendente;
-  int endereco_pendencia, indice_codigo_objeto, contagem_linha = 0;
+  string codigo_objeto_linha, nome_rotulo, codigo_pendente, codigo_corrigido;
+  int endereco_pendencia, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
   vector<int> indice_enderecos;
   istringstream iss(texto);
 
   symbolTable.clear();
+  analisador_sintatico->reset_endereco();
 
   for (string linha; getline(iss, linha); contagem_linha += 1)
   { 
@@ -464,7 +475,7 @@ string Assembler::monta_texto( string nome_arquivo )
   codigo_objeto = codigo_objeto.substr(0, codigo_objeto.size()-1);
 
   indice_enderecos.push_back(0);
-  for(int i = 0; i < codigo_objeto.length(); ++i) 
+  for(unsigned int i = 0; i < codigo_objeto.length(); ++i) 
   {
     char caractere_objeto = codigo_objeto[i];
     char espaco = ' ';
@@ -477,17 +488,20 @@ string Assembler::monta_texto( string nome_arquivo )
   // Depois precisamos resolver as pendências
   for(unsigned int i = 0; i < symbolTable.size(); i++ )
   {
-    nome_rotulo = symbolTable[i].symbol;
-    cout << nome_rotulo << endl;
-    do{
-      endereco_pendencia = resolvePendency(nome_rotulo);
-      cout << endereco_pendencia << endl;
-      indice_codigo_objeto = indice_enderecos[endereco_pendencia];
-      if( endereco_pendencia == -1 ) break;
-      cout << indice_codigo_objeto << " " << indice_enderecos[endereco_pendencia+1] << endl;
-      codigo_pendente = codigo_objeto.substr(indice_codigo_objeto+1, indice_enderecos[endereco_pendencia+1] - indice_codigo_objeto - 1);
-      cout << codigo_pendente << "!" <<endl;
-    } while( endereco_pendencia != -1 );
+    if( symbolTable[i].is_defined )
+    { 
+      nome_rotulo = symbolTable[i].symbol;
+      do{
+        endereco_pendencia = resolvePendency(nome_rotulo);
+        indice_inicio_codigo_objeto = indice_enderecos[endereco_pendencia];
+        indice_final_codigo_objeto = indice_enderecos[endereco_pendencia+1];
+
+        if( endereco_pendencia == -1 ) break;
+
+        codigo_corrigido = to_string(symbolTable[i].address);
+        codigo_objeto.replace(indice_inicio_codigo_objeto+1, indice_final_codigo_objeto - indice_inicio_codigo_objeto - 1, codigo_corrigido);
+      } while( endereco_pendencia != -1 );
+    }
   }
   return codigo_objeto;
 }

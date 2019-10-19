@@ -321,7 +321,7 @@ TEST_CASE( "Contagem", "[Semântico]" )
   SECTION( "Monta arquivo .asm para codigo objeto")
   {
     REQUIRE( montador->monta_texto("test_files/teste_simpes.asm") == "11 00 3 00 11 00 10 00 2 00 11 00");
-    REQUIRE( montador->monta_texto("test_files/teste_sections_e_tabela_simbolos.asm") == "12 30 10 30 4 2 11 32 3 2 11 34 10 30 2 34 11 34 13 34 9 32 30 10 34 7 5 14 2 00 00 00");
+    REQUIRE( montador->monta_texto("test_files/teste_sections_e_tabela_simbolos.asm") == "12 29 10 29 4 28 11 30 3 28 11 31 10 29 2 31 11 31 13 31 9 30 29 10 29 7 4 14 2 00 00 00");
 
   } //SECTION( "Conta linhas, endereços e percorre o arquivo")
 }
