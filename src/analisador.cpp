@@ -51,12 +51,12 @@ bool Scanner::is_decimal(const string palavra ){
       possivel_numero.end(), [](char caractere) { return !isdigit(caractere); }) == possivel_numero.end();
   
   // Depois validamos se é hexadecimal
-  if( palavra.size() > 2 )
+  if( possivel_numero.size() > 2 )
   {
-    string dois_primeiros_simbolos = palavra.substr(0, 2);
+    string dois_primeiros_simbolos = possivel_numero.substr(0, 2);
     if( dois_primeiros_simbolos == "0X")
     {
-      string possivel_hexadecimal = palavra.substr(2, palavra.size() - 2);
+      string possivel_hexadecimal = possivel_numero.substr(2, possivel_numero.size() - 2);
       
       eh_hexadecimal = find_if(possivel_hexadecimal.begin(), 
       possivel_hexadecimal.end(), [](char caractere) { return !isxdigit(caractere); }) == possivel_hexadecimal.end();
@@ -84,11 +84,6 @@ bool Scanner::is_variable(const string palavra )
   return find_if(palavra.begin(), 
       palavra.end(), [](char caractere) { return !isalpha(caractere) && !isdigit(caractere) && caractere != '_'; }) == palavra.end();
   return true;  
-}
-
-bool Scanner::is_variable_with_decimal(const string palavra )
-{
-  return false;
 }
 
 bool Scanner::is_comment(const string palavra )
@@ -157,7 +152,7 @@ bool Scanner::is_symbol(const string palavra )
   else return false;
 }
 
-bool Scanner::is_copysubargument( string argumento )
+bool Scanner::is_variable_plus_decimal(  string argumento )
 {
   size_t coordenada_primeira_soma = argumento.find("+", 0);
   if( coordenada_primeira_soma == string::npos ){
@@ -185,11 +180,11 @@ bool Scanner::is_copyargumment( string palavra )
 
   // Se ela existir, primeiro validamos se o primeiro argumento possui um sinal de soma
   string primeiro_argumento = palavra.substr(0, coordenada_primeira_virgula);
-  if( !is_copysubargument( primeiro_argumento) ) return false;
+  if( !is_variable_plus_decimal(  primeiro_argumento) ) return false;
 
   // Repetimos o processo para o segundo argumento
   string segundo_argumento = palavra.substr( coordenada_primeira_virgula + 1, palavra.size()-1 );
-  if( !is_copysubargument( segundo_argumento )) return false;
+  if( !is_variable_plus_decimal(  segundo_argumento )) return false;
 
   
   

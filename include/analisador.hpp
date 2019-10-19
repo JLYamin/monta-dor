@@ -15,14 +15,13 @@ class Scanner
     Scanner( );
     bool is_decimal(       string );
     bool is_variable(      string );
-    bool is_variable_with_decimal( string );
     bool is_comment(       string );
     bool is_label(         string );
     bool is_directive(     string );
     bool is_opcode(        string );
     bool is_symbol(        string );
     bool is_copyargumment( string );
-    bool is_copysubargument( string );
+    bool is_variable_plus_decimal(  string );
 
 
     string tokenize(string);

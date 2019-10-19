@@ -27,8 +27,8 @@ TEST_CASE( "Número", "[Lexico]" )
     REQUIRE( analisador_lexico->is_decimal("0XA3"));
     REQUIRE( analisador_lexico->is_decimal("0X33"));
     REQUIRE( analisador_lexico->is_decimal("0X0"));
-    REQUIRE( analisador_lexico->is_decimal("-0x03"));
-    REQUIRE( analisador_lexico->is_decimal("-0xA3"));
+    REQUIRE( analisador_lexico->is_decimal("-0X03"));
+    REQUIRE( analisador_lexico->is_decimal("-0XA3"));
 
   }// SECTION("Hexadecimal Válido")
 
@@ -99,8 +99,8 @@ TEST_CASE( "Variável com incremento", "[Lexico]")
 {
   SECTION("Variável com decimal válido")
   {
-    REQUIRE( analisador_lexico->is_variable_with_decimal("Variavel+2"));
-    REQUIRE( analisador_lexico->is_variable_with_decimal("Vari+24"));
+    REQUIRE( analisador_lexico->is_variable_plus_decimal("Variavel+2"));
+    REQUIRE( analisador_lexico->is_variable_plus_decimal("Vari+24"));
   }
 } //TEST_CASE( "Variável com incremento", "[Lexico]")
 
