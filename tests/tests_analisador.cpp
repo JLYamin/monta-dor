@@ -285,6 +285,8 @@ TEST_CASE( "Retorna Token", "[Lexico]" )
     REQUIRE(analisador_lexico->tokenize("1NVALIDO") == "INVALID");
     REQUIRE(analisador_lexico->tokenize("!NVALIDO") == "INVALID");
     REQUIRE(analisador_lexico->tokenize("NTA@ONISTA") == "INVALID");
+    REQUIRE(analisador_lexico->tokenize("abaco+sad+20") == "INVALID");
+
 
   } // SECTION("Token inválido")
 
@@ -297,6 +299,7 @@ TEST_CASE( "Valida linha", "[Sintático]" )
     REQUIRE( analisador_sintatico->monta_linha("ADD 1") == "1 1");
     REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL ;CURTO COMENTAR CODIGO PORQUE É UMA BOA PRATICA") == "1 00");
     REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL") == "1 00");
+    REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL+2") == "1 002");
     REQUIRE( analisador_sintatico->monta_linha("SUB VARIAVEL") == "2 00");
     REQUIRE( analisador_sintatico->monta_linha("MULT 5 ;COMENTARIO") == "3 5");
     REQUIRE( analisador_sintatico->monta_linha("JMP VARIAVEL") == "5 00");

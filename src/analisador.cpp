@@ -262,7 +262,9 @@ string Parser::monta_argumento(const string argumento )
     addPendency(argumento, endereco_atual + 1);
   } else if( token_argumento == "DECIMAL" ) {
     codigo_objeto_argumento = " " + argumento;
-  }  else if( token_argumento == "COPYARGS" ) {
+  } else if( token_argumento == "VARIABLEPLUS") {
+    codigo_objeto_argumento = monta_subargumento( argumento, 1 );
+  } else if( token_argumento == "COPYARGS" ) {
     size_t coordenada_primeira_virgula = argumento.find(",", 0);
 
     string primeiro_subargumento = argumento.substr( 0, coordenada_primeira_virgula );
