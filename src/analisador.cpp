@@ -455,10 +455,15 @@ string Assembler::monta_texto( string nome_arquivo )
   string texto = leitor->carrega_texto( nome_arquivo );
   string codigo_objeto = "";
   string codigo_objeto_linha, nome_rotulo, codigo_pendente, codigo_corrigido, texto_preprocessado;
-  int endereco_pendencia, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
+  int endereco_pendencia, coordenada_equ, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
   vector<int> indice_enderecos;
-  cout << texto << endl;
-  texto_preprocessado = ifProcessor(texto);
+
+  coordenada_equ = texto.find("EQU", 0);
+  if( coordenada_equ == string::npos ){
+    texto_preprocessado = texto;
+  } else {
+    texto_preprocessado = ifProcessor(texto);
+  }
   cout << texto_preprocessado << endl;
   istringstream iss(texto_preprocessado);
 

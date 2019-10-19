@@ -15,7 +15,6 @@ string ifProcessor(string stringFile) {
   while (*it != "SECTION") {
     processedCode.erase(it); // Apaga as linhas até aparecer um SECTION
   }
-
   return vectorToString(processedCode);
 }
 
