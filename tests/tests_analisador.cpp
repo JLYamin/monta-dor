@@ -27,6 +27,9 @@ TEST_CASE( "Número", "[Lexico]" )
     REQUIRE( analisador_lexico->is_decimal("0XA3"));
     REQUIRE( analisador_lexico->is_decimal("0X33"));
     REQUIRE( analisador_lexico->is_decimal("0X0"));
+    REQUIRE( analisador_lexico->is_decimal("-0X03"));
+    REQUIRE( analisador_lexico->is_decimal("-0XA3"));
+
   }// SECTION("Hexadecimal Válido")
 
   SECTION("Hexadecimal Inválido")
@@ -91,6 +94,15 @@ TEST_CASE( "Variável", "[Lexico]" )
     REQUIRE_FALSE( analisador_lexico->is_variable("3@OTULO_INVALIDO:"));
   } // SECTION("Variável com símbolos")
 } // TEST_CASE( "Variável", "[Lexico]" ) 
+
+TEST_CASE( "Variável com incremento", "[Lexico]")
+{
+  SECTION("Variável com decimal válido")
+  {
+    REQUIRE( analisador_lexico->is_variable_plus_decimal("Variavel+2"));
+    REQUIRE( analisador_lexico->is_variable_plus_decimal("Vari+24"));
+  }
+} //TEST_CASE( "Variável com incremento", "[Lexico]")
 
 TEST_CASE( "Comentários", "[Lexico]" ) 
 { 
@@ -228,6 +240,7 @@ TEST_CASE( "Exceções ", "[Lexico]" )
     REQUIRE( analisador_lexico->is_copyargumment("2,3") );
     REQUIRE_FALSE( analisador_lexico->is_copyargumment("PARA,QUE,SOMENT2ENOCOPY") );
   }
+
 } // TEST_CASE( "Exceções ", "[Lexico]" )
 
 TEST_CASE( "Retorna Token", "[Lexico]" )
@@ -262,6 +275,9 @@ TEST_CASE( "Retorna Token", "[Lexico]" )
 
     REQUIRE(analisador_lexico->tokenize("+") == "SYMBOL");
     REQUIRE(analisador_lexico->tokenize("CHOCOLATE,PIMENTA")     == "COPYARGS");
+
+    REQUIRE( analisador_lexico->tokenize("VARIAVEL+3"  ) == "VARIABLEPLUS");
+    REQUIRE( analisador_lexico->tokenize("VARIAVEL+21"  ) == "VARIABLEPLUS");
   } // SECTION("Token válido")
 
   SECTION("Token inválido")
@@ -269,6 +285,8 @@ TEST_CASE( "Retorna Token", "[Lexico]" )
     REQUIRE(analisador_lexico->tokenize("1NVALIDO") == "INVALID");
     REQUIRE(analisador_lexico->tokenize("!NVALIDO") == "INVALID");
     REQUIRE(analisador_lexico->tokenize("NTA@ONISTA") == "INVALID");
+    REQUIRE(analisador_lexico->tokenize("abaco+sad+20") == "INVALID");
+
 
   } // SECTION("Token inválido")
 
@@ -281,6 +299,7 @@ TEST_CASE( "Valida linha", "[Sintático]" )
     REQUIRE( analisador_sintatico->monta_linha("ADD 1") == "1 1");
     REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL ;CURTO COMENTAR CODIGO PORQUE É UMA BOA PRATICA") == "1 00");
     REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL") == "1 00");
+    REQUIRE( analisador_sintatico->monta_linha("ADD VARIAVEL+2") == "1 02");
     REQUIRE( analisador_sintatico->monta_linha("SUB VARIAVEL") == "2 00");
     REQUIRE( analisador_sintatico->monta_linha("MULT 5 ;COMENTARIO") == "3 5");
     REQUIRE( analisador_sintatico->monta_linha("JMP VARIAVEL") == "5 00");
@@ -299,8 +318,8 @@ TEST_CASE( "Valida linha", "[Sintático]" )
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,2") == "9 00 2");
     REQUIRE( analisador_sintatico->monta_linha("COPY 1,OLD_DATA") == "9 1 00");
     REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA") == "9 00 00");
-    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA+1,OLD_DATA") == "9 001 00");
-    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA+2") == "9 00 002");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA+1,OLD_DATA") == "9 01 00");
+    REQUIRE( analisador_sintatico->monta_linha("COPY NEW_DATA,OLD_DATA+2") == "9 00 02");
   } // SECTION( "Monta linha com opcodes com dois argumentos")
 
   SECTION( "Monta linha com rótulo no começo" )
@@ -320,10 +339,10 @@ TEST_CASE( "Contagem", "[Semântico]" )
 { 
   SECTION( "Monta arquivo .asm para codigo objeto")
   {
-    REQUIRE( montador->monta_texto("test_files/teste_simpes.asm") == "11 00 3 00 11 00 10 00 2 00 11 00");
-    REQUIRE( montador->monta_texto("test_files/teste_sections_e_tabela_simbolos.asm") == "12 29 10 29 4 28 11 30 3 28 11 31 10 29 2 31 11 31 13 31 9 30 29 10 29 7 4 14 2 00 00 00");
-    REQUIRE( montador->monta_texto("test_files/teste_espacamento.asm") == "12 15 12 16 10 15 3 16 4 18 11 17 13 17 14 00 00 00 2");
-    REQUIRE( montador->monta_texto("test_files/triangulo.asm") == "12 15 12 16 10 15 3 16 4 18 11 17 13 17 14 00 00 00 2");
+    REQUIRE( montador->monta_texto("teste_simpes.asm", "test_files/") == "11 00 3 00 11 00 10 00 2 00 11 00");
+    REQUIRE( montador->monta_texto("teste_sections_e_tabela_simbolos.asm", "test_files/") == "12 30 10 29 4 28 11 30 3 28 11 32 10 29 2 32 11 32 13 32 9 30 29 10 29 7 4 14 2 00 00 00 00");
+    REQUIRE( montador->monta_texto("teste_espacamento.asm", "test_files/") == "12 15 12 16 10 15 3 16 4 18 11 17 13 17 14 00 00 00 2");
+    REQUIRE( montador->monta_texto("triangulo.asm", "test_files/") == "12 15 12 16 10 15 3 16 4 18 11 17 13 17 14 00 00 00 2");
 
   } //SECTION( "Conta linhas, endereços e percorre o arquivo")
 }

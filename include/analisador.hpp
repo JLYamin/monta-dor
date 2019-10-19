@@ -21,7 +21,7 @@ class Scanner
     bool is_opcode(        string );
     bool is_symbol(        string );
     bool is_copyargumment( string );
-    bool is_copysubargument( string );
+    bool is_variable_plus_decimal(  string );
 
 
     string tokenize(string);
@@ -54,7 +54,7 @@ class Assembler
     ~Assembler();
     Parser* analisador_sintatico;
     ReaderWriter* leitor;
-    string monta_texto( string );
+    string monta_texto( string, string );
 
 
 };
