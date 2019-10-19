@@ -6,6 +6,8 @@
 *.lo
 *.o
 *.obj
+*.gcda
+*.gcno
 
 # Precompiled Headers
 *.gch
@@ -30,3 +32,9 @@
 *.exe
 *.out
 *.app
+
+src/obj/
+
+all_tester
+
+*.pre
