@@ -322,6 +322,8 @@ TEST_CASE( "Contagem", "[Semântico]" )
   {
     REQUIRE( montador->monta_texto("test_files/teste_simpes.asm") == "11 00 3 00 11 00 10 00 2 00 11 00");
     REQUIRE( montador->monta_texto("test_files/teste_sections_e_tabela_simbolos.asm") == "12 29 10 29 4 28 11 30 3 28 11 31 10 29 2 31 11 31 13 31 9 30 29 10 29 7 4 14 2 00 00 00");
+    REQUIRE( montador->monta_texto("test_files/teste_espacamento.asm") == "12 15 12 16 10 15 3 16 4 18 11 17 13 17 14 00 00 00 2");
+    REQUIRE( montador->monta_texto("test_files/triangulo.asm") == "12 15 12 16 10 15 3 16 4 18 11 17 13 17 14 00 00 00 2");
 
   } //SECTION( "Conta linhas, endereços e percorre o arquivo")
 }

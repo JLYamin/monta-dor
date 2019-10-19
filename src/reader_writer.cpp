@@ -28,18 +28,18 @@ string ReaderWriter::carrega_texto(string caminho_do_arquivo_completo = "Entrada
 
     transform(data.begin(), data.end(), data.begin(), ::toupper);
 
-    regex multiplos_espacos_comeco_linha("^([ ]{2,}|[\t])");
-    regex multiplos_espacos("([ ]{2,}|[\t])");
+    regex multiplos_espacos_comeco_linha("\n([\t ]+)");
+    regex multiplos_espacos("([\t ]+)");
     regex multiplos_saltos_linha("(\n+)");
 
-    data = regex_replace(data, multiplos_espacos_comeco_linha, "");
     data = regex_replace(data, multiplos_espacos, " ");
+    data = regex_replace(data, multiplos_espacos_comeco_linha, "\n");
     data = regex_replace(data, multiplos_saltos_linha, "\n");
-    return data;
   } else {
     return "";
     cout << "Problemas ao ler arquivo";
   }
+    return data;
 }
 
 /*

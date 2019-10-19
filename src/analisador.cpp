@@ -454,14 +454,16 @@ string Assembler::monta_texto( string nome_arquivo )
 {
   string texto = leitor->carrega_texto( nome_arquivo );
   string codigo_objeto = "";
-  string codigo_objeto_linha, nome_rotulo, codigo_pendente, codigo_corrigido;
+  string codigo_objeto_linha, nome_rotulo, codigo_pendente, codigo_corrigido, texto_preprocessado;
   int endereco_pendencia, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
   vector<int> indice_enderecos;
-  istringstream iss(texto);
+  cout << texto << endl;
+  texto_preprocessado = ifProcessor(texto);
+  cout << texto_preprocessado << endl;
+  istringstream iss(texto_preprocessado);
 
   symbolTable.clear();
   analisador_sintatico->reset_endereco();
-
   for (string linha; getline(iss, linha); contagem_linha += 1)
   { 
     codigo_objeto_linha = analisador_sintatico->monta_linha(linha);
@@ -473,7 +475,6 @@ string Assembler::monta_texto( string nome_arquivo )
   }
   // Remove o último espaço
   codigo_objeto = codigo_objeto.substr(0, codigo_objeto.size()-1);
-
   indice_enderecos.push_back(0);
   for(unsigned int i = 0; i < codigo_objeto.length(); ++i) 
   {
