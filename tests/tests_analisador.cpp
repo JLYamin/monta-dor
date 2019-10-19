@@ -316,7 +316,6 @@ TEST_CASE( "Valida linha", "[Sintático]" )
   }
   
 } // TEST_CASE( "Valida linha", "[Sintático]" ) 
-
 TEST_CASE( "Contagem", "[Semântico]" ) 
 { 
   SECTION( "Monta arquivo .asm para codigo objeto")

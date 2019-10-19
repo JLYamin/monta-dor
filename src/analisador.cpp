@@ -249,10 +249,14 @@ string Parser::monta_argumento(const string argumento )
   // Dependendo do tipo do TOKEN, a linha é montada de forma diferente
   {
     // Se for uma variável e não tiver sido adicionada à tabela, adiciona ela como não definida
-    if( !checkSymbol(argumento) ) addSymbol(argumento, 0, false);
+    //if( !checkSymbol(argumento) ) addSymbol(argumento, 0, false);
     codigo_objeto_argumento = " 00";
     // Adicionamos então o símbolo à tabela de pendências para depois trocarmos pelo valor correto
+    if(!checkSymbol(argumento)) addSymbol(argumento, endereco_atual+1, false);
     addPendency(argumento, endereco_atual + 1);
+    if(argumento == "VARIAVEL"){
+      cout << 
+    }
   } else if( token_argumento == "DECIMAL" ) {
     codigo_objeto_argumento = " " + argumento;
   }  else if( token_argumento == "COPYARGS" ) {
@@ -266,8 +270,8 @@ string Parser::monta_argumento(const string argumento )
     
     if( primeiro_subtoken == "VARIABLE" )
     {
-      if( !checkSymbol(primeiro_subargumento) ) addSymbol(primeiro_subargumento, 0, false);
-      addPendency(primeiro_subargumento, endereco_atual + 1);
+      //if( !checkSymbol(primeiro_subargumento) ) addSymbol(primeiro_subargumento, 0, false);
+      //addPendency(primeiro_subargumento, endereco_atual + 1);
       codigo_objeto_argumento = " 00";
     } else if( primeiro_subtoken == "DECIMAL" ) {
       codigo_objeto_argumento = " " + primeiro_subargumento;
@@ -329,7 +333,7 @@ string Parser::monta_linha(const string linha)
       // Se houver, é a segunda palavra
       if( coordenada_segundo_espaco == string::npos ) 
       { 
-        argumento = linha.substr(coordenada_primeiro_espaco + 1, linha.size()-1 );
+        argumento = linha.substr(coordenada_primeiro_espaco + 1, linha.size() - coordenada_primeiro_espaco-1 );
       } else {
         argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco - coordenada_primeiro_espaco -1 );
       }
@@ -402,7 +406,7 @@ string Parser::monta_linha(const string linha)
           if( checkSymbol( primeira_palavra ) )
           // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
           {
-            updateSymbol(primeira_palavra, get_ultimo_endereco() );
+            //updateSymbol(primeira_palavra, get_ultimo_endereco() );
           } else {
           // Se não o símbolo é adicionado a tabela já definido
             addSymbol( primeira_palavra, get_ultimo_endereco(), true );
@@ -411,7 +415,9 @@ string Parser::monta_linha(const string linha)
         codigo_objeto = "00";
       }
     } else {
-    codigo_objeto = monta_linha(resto_linha);
+      if( !checkSymbol( primeira_palavra ) )  addSymbol( primeira_palavra, get_ultimo_endereco(), false );
+          
+      codigo_objeto = codigo_objeto + monta_linha(resto_linha);
     }
   }
 
@@ -438,9 +444,12 @@ string Assembler::monta_texto( string nome_arquivo )
 {
   string texto = leitor->carrega_texto( nome_arquivo );
   string codigo_objeto = "";
-  string codigo_objeto_linha;
-  int contagem_linha = 0;
+  string codigo_objeto_linha, nome_rotulo, codigo_pendente;
+  int endereco_pendencia, indice_codigo_objeto, contagem_linha = 0;
+  vector<int> indice_enderecos;
   istringstream iss(texto);
+
+  symbolTable.clear();
 
   for (string linha; getline(iss, linha); contagem_linha += 1)
   { 
@@ -448,15 +457,37 @@ string Assembler::monta_texto( string nome_arquivo )
     if( codigo_objeto_linha != "") 
     {
       codigo_objeto = codigo_objeto + codigo_objeto_linha + " ";
+      // Armazenamos então o índice do endereço
     }
   }
   // Remove o último espaço
   codigo_objeto = codigo_objeto.substr(0, codigo_objeto.size()-1);
 
+  indice_enderecos.push_back(0);
+  for(int i = 0; i < codigo_objeto.length(); ++i) 
+  {
+    char caractere_objeto = codigo_objeto[i];
+    char espaco = ' ';
+
+    if( caractere_objeto == espaco )
+    {
+      indice_enderecos.push_back(i);
+    }
+  }
   // Depois precisamos resolver as pendências
   for(unsigned int i = 0; i < symbolTable.size(); i++ )
   {
-
+    nome_rotulo = symbolTable[i].symbol;
+    cout << nome_rotulo << endl;
+    do{
+      endereco_pendencia = resolvePendency(nome_rotulo);
+      cout << endereco_pendencia << endl;
+      indice_codigo_objeto = indice_enderecos[endereco_pendencia];
+      if( endereco_pendencia == -1 ) break;
+      cout << indice_codigo_objeto << " " << indice_enderecos[endereco_pendencia+1] << endl;
+      codigo_pendente = codigo_objeto.substr(indice_codigo_objeto+1, indice_enderecos[endereco_pendencia+1] - indice_codigo_objeto - 1);
+      cout << codigo_pendente << "!" <<endl;
+    } while( endereco_pendencia != -1 );
   }
   return codigo_objeto;
 }
