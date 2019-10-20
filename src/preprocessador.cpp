@@ -78,7 +78,7 @@ vector<string> ifUppercase(vector<string> vec) {
 string vectorToString(vector<string> code) {
   string result = "";
   vector<string>::iterator it = code.begin();
-  for (it ; it != code.end(); ++it) {
+  for (; it != code.end(); ++it) {
     result += *it;
     if (*it != "\n" && *(it + 1) != "\n")
       result += " ";

@@ -38,7 +38,8 @@ class Parser
     ErrorPrinter* gerenciador_erros;
     string monta_linha(string);
     int get_ultimo_endereco();
-    void reset_endereco();
+    int contador_linha;
+    void reset();
 
     private:
     vector<int> indice_enderecos;
