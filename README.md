@@ -2,8 +2,8 @@
 Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasília
 
 ### Alunos:
-- João Lucas Azevedo Yamin Rodrigues da Cunha
-- Thiago Luis Rodrigues Pinho
+- João Lucas Azevedo Yamin Rodrigues da Cunha - 
+- Thiago Luis Rodrigues Pinho - 15/0065205
 
 **Link da especificação do trabalho:** [1º Trabalho Prático - Aprender UnB](https://aprender.ead.unb.br/pluginfile.php/724430/mod_resource/content/0/Trabalho1.pdf)
 
@@ -27,10 +27,10 @@ Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasíl
   - [x] Tabelas
     - [x] Tabela de Instruções para consulta
     - [x] Montagem da tabela de símbolos
-  - [ ] Detecção de Erros
+  - [x] Detecção de Erros
     - [x] Detecção de erros léxicos
-    - [ ] Detecção de erros sintáticos
-    - [ ] Detecção de erros semânticos
+    - [x] Detecção de erros sintáticos
+    - [x] Detecção de erros semânticos
     - [x] Exibição das linhas e classificação dos erros
   - [x] Código de Máquina
     - [x] Adicionar o *opcode*

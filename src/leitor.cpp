@@ -2,36 +2,25 @@
 
 */
 
-#include "reader_writer.hpp"
+#include "leitor.hpp"
 
-string ReaderWriter::carrega_texto(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
+string Leitor::carrega_texto(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
 {
   ifstream infile (caminho_do_arquivo_completo);
-  string data;
+  string data, linha;
 
-  if (infile) {
-    // open a file in read mode.
+  if (infile.is_open()) {
     
-    infile.seekg (0, infile.end);
-    int length = infile.tellg();
-    infile.seekg (0, infile.beg);
-
-    char * buffer = new char [length];
-
-    // read data as a block:
-    infile.read (buffer,length);
-    infile.close();
-
-    data = buffer;
-
-    // ...buffer contains the entire file...
+    while( getline (infile, linha) )
+    {
+      data += linha + "\n";  
+    }
 
     transform(data.begin(), data.end(), data.begin(), ::toupper);
 
     regex multiplos_espacos_comeco_linha("\n([\t ]+)");
     regex multiplos_espacos("([\t ]+)");
     regex multiplos_saltos_linha("(\n+)");
-
     data = regex_replace(data, multiplos_espacos, " ");
     data = regex_replace(data, multiplos_espacos_comeco_linha, "\n");
     data = regex_replace(data, multiplos_saltos_linha, "\n");
@@ -44,7 +33,7 @@ string ReaderWriter::carrega_texto(string caminho_do_arquivo_completo = "Entrada
 
 /*
 int main(){
-  ReaderWriter leitura;
+  Leitor leitura;
   cout << leitura.texto_lido;
   return 0;
 }

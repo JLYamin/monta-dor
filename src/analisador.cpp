@@ -214,7 +214,9 @@ string Scanner::tokenize(const string palavra )
 Parser::Parser()
 {
   analisador_lexico = new Scanner();
+  gerenciador_erros = new ErrorPrinter();
   contagem_endereco = 0;
+  contador_linha = 0;
 }
 
 int Parser::get_ultimo_endereco()
@@ -222,15 +224,17 @@ int Parser::get_ultimo_endereco()
   return contagem_endereco;
 }
 
-void Parser::reset_endereco()
+void Parser::reset()
 {
   contagem_endereco = 0;
+  contador_linha = 0;
 }
 
 
 Parser::~Parser()
 {
-  delete(analisador_lexico);
+  delete( analisador_lexico );
+  delete( gerenciador_erros );
 }
 
 string Parser::monta_subargumento(const string  subargumento, const int contagem_argumentos )
@@ -301,7 +305,13 @@ string Parser::monta_argumento(const string argumento )
     } else {
       codigo_objeto_argumento = codigo_objeto_argumento + monta_subargumento( segundo_subargumento, 2 );
     }
+  } else if( token_argumento == "INVALID") {
+    gerenciador_erros->addError(0, 1, "Na linha " + to_string(contador_linha) + " Token inválido: " + argumento );
+    codigo_objeto_argumento = ""; // O TOKEN É INVÁLIDO
+  } else {
+    codigo_objeto_argumento = ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL, um DECIMAL COM INCREMENTO, UM NÚMERO OU UM ARGUMENTO PARA O COPY
   }
+
   return codigo_objeto_argumento;
 }
 
@@ -310,9 +320,15 @@ string Parser::monta_linha(const string linha)
   if( linha.empty() ) return "";
 
   //Procuramos o primeiro espaço
-  size_t coordenada_primeiro_espaco = linha.find(" ", 0);
-  string primeira_palavra;
-  string codigo_objeto;
+  size_t coordenada_primeiro_espaco, coordenada_segundo_espaco, coordenada_terceiro_espaco; 
+  string primeira_palavra, segunda_palavra, terceira_palavra;
+  string primeiro_token, segundo_token, terceiro_token;
+  string codigo_objeto, codigo_objeto_argumento, opcode;
+  vector<int> dados_opcode;
+  int quantidade_argumentos, memoria_alocada;
+  bool excesso_argumentos = false;
+  contador_linha += 1;
+  coordenada_primeiro_espaco = linha.find(" ", 0);
   // Caso não haja o primeiro espaço, então há uma palavra ou nenhuma
   if( coordenada_primeiro_espaco == string::npos ) 
       { 
@@ -321,33 +337,64 @@ string Parser::monta_linha(const string linha)
         primeira_palavra = linha.substr(0, coordenada_primeiro_espaco );
       }
   // Validamos a primeira palavra e a partir do token, fazemos diferentes comportamentos
-  string primeiro_token = analisador_lexico->tokenize(primeira_palavra);
-  if( primeiro_token == "INVALID" ) return "";
+  primeiro_token = analisador_lexico->tokenize(primeira_palavra);
   if( primeiro_token == "OPCODE")
   {
-    vector<int> dados_opcode = analisador_lexico->tabela_opcodes[primeira_palavra];
+    dados_opcode = analisador_lexico->tabela_opcodes[primeira_palavra];
     // O segundo inteiro dos dados da tabela de opcodes é o tamanho da instrução
     // uma instrução sempre tem o tamanho do mnemônico somado ao número de argumentos
     // O primeiro é o seu código objeto
-    string opcode = to_string(dados_opcode[0]);
-    int quantidade_argumentos = dados_opcode[1] - 1;
+    opcode = to_string(dados_opcode[0]);
+    quantidade_argumentos = dados_opcode[1] - 1;
     codigo_objeto = opcode;
 
-    if ( quantidade_argumentos > 0 ) {
+    if( quantidade_argumentos == 0) 
+    {
+      coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco+1);
+      if( coordenada_segundo_espaco != string::npos )
+      {
+        segundo_token = analisador_lexico->tokenize( segunda_palavra );
+        if( segundo_token != "COMMENT") 
+        {
+          gerenciador_erros->addError(0, 2, "Na linha " + to_string(contador_linha) + " a instrução STOP não recebe argumentos" );
+          return "";
+        }
+      }
+
+    } else if ( quantidade_argumentos > 0 ) {
     // Se for um opcode de somente um argumento, ele aceita operações com variáveis
     // ou com números
       //Procuramos o segundo espaço
-      size_t coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco+1);
-      string argumento; 
+      coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco+1);
+      coordenada_terceiro_espaco = linha.find(" ", coordenada_segundo_espaco);
+
       // Se não houver segundo espaço, buscamos o segundo token como a última palavra
       // Se houver, é a segunda palavra
       if( coordenada_segundo_espaco == string::npos ) 
       { 
-        argumento = linha.substr(coordenada_primeiro_espaco + 1, linha.size() - coordenada_primeiro_espaco-1 );
+        segunda_palavra = linha.substr(coordenada_primeiro_espaco + 1, linha.size() - coordenada_primeiro_espaco-1 );
       } else {
-        argumento = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco - coordenada_primeiro_espaco -1 );
+        segunda_palavra = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco - coordenada_primeiro_espaco -1 );
+        if( coordenada_terceiro_espaco == string::npos )
+        {
+          terceira_palavra = linha.substr( coordenada_segundo_espaco + 1, linha.size() - coordenada_segundo_espaco - 1 );
+        } else {
+          terceira_palavra = linha.substr( coordenada_segundo_espaco + 1, coordenada_terceiro_espaco );
+        }
+        terceiro_token = analisador_lexico->tokenize( terceira_palavra );
+        if( terceiro_token != "COMMENT") {
+          excesso_argumentos = true;
+        }
       }
-      codigo_objeto = codigo_objeto + monta_argumento( argumento );
+
+      codigo_objeto_argumento = monta_argumento( segunda_palavra );
+      if( codigo_objeto_argumento == "" || excesso_argumentos )
+      {
+        gerenciador_erros->addError(0, 2, "Na linha " + to_string(contador_linha) + " a instrução " + primeira_palavra + " requer um número ou rótulo válido como argumento" );
+        return "";
+      } else {
+        codigo_objeto = codigo_objeto + codigo_objeto_argumento;
+      }
     } 
     contagem_endereco += dados_opcode[1];
 
@@ -362,7 +409,7 @@ string Parser::monta_linha(const string linha)
     } else {
         resto_linha = linha.substr(coordenada_primeiro_espaco + 1, linha.size()-coordenada_primeiro_espaco-1);
     }
-    size_t coordenada_segundo_espaco = resto_linha.find(" ", 0);
+    coordenada_segundo_espaco = resto_linha.find(" ", 0);
     string segunda_palavra, segundo_token;
     segunda_palavra = resto_linha.substr(0, coordenada_segundo_espaco);
     segundo_token = analisador_lexico->tokenize( segunda_palavra );
@@ -383,7 +430,13 @@ string Parser::monta_linha(const string linha)
         // Caso exista uma segunda palavra, ela deve ser obrigatoriamente um decimal
         terceiro_token = analisador_lexico->tokenize( terceira_palavra );
 
-        if( terceiro_token != "DECIMAL" || terceiro_token == "INVALID" ) return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+        if (  terceiro_token == "INVALID" ) {
+            gerenciador_erros->addError(0, 1, "Na linha " + to_string(contador_linha) + "  Token inválido: " + terceira_palavra);
+            return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+        } else if( terceiro_token != "DECIMAL" ) {
+            gerenciador_erros->addError(0, 2, "Na linha " + to_string(contador_linha) + "  a diretiva CONST um número válido como argumento.");
+            return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+        }
 
         if( checkSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1)  ) )
         // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
@@ -413,8 +466,13 @@ string Parser::monta_linha(const string linha)
           terceira_palavra = resto_linha.substr(coordenada_segundo_espaco + 1, coordenada_terceiro_espaco - coordenada_segundo_espaco - 1);
           // Caso exista uma segunda palavra, ela deve ser obrigatoriamente um decimal
           terceiro_token = analisador_lexico->tokenize( terceira_palavra );
-
-          if( terceiro_token != "DECIMAL" || terceiro_token == "INVALID") return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+          if (  terceiro_token == "INVALID" ) {
+            gerenciador_erros->addError(0, 1, "Na linha " + to_string(contador_linha) + "  Token inválido: " + terceira_palavra);
+            return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+          } else if( terceiro_token != "DECIMAL" ) {
+            gerenciador_erros->addError(0, 2, "Na linha " + to_string(contador_linha) + "  a diretiva SPACE requer zero ou um números válidos como argumentos.");
+            return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+          }
 
           if( checkSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1)  ) )
           // Se o símbolo já tiver sido adicionado, atualiza seu endereço e o define
@@ -425,7 +483,7 @@ string Parser::monta_linha(const string linha)
             addSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1) , get_ultimo_endereco(), true );
           }
         } 
-        int memoria_alocada = stoi(terceira_palavra);
+        memoria_alocada = stoi(terceira_palavra);
         for(int i = memoria_alocada; i > 0; i--)
         {
           contagem_endereco += 1;
@@ -435,19 +493,38 @@ string Parser::monta_linha(const string linha)
             codigo_objeto += " ";
           }
         }
-      }
+      } else if ( segunda_palavra == "INVALID") {
+        gerenciador_erros->addError(0, 1, "Na linha " + to_string(contador_linha) + " Token inválido: " + segunda_palavra );
+        return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+      } 
     } else {
       if( !checkSymbol( primeira_palavra ) )
       {
         addSymbol( primeira_palavra.substr(0, primeira_palavra.size()-1), get_ultimo_endereco(), true );
       } else {
         cout << "Erro" << endl; // UM ERRO OCORREU, DUAS DEFINIÇÕES DO MESMO ROTULO
+        gerenciador_erros->addError(0, 3, "Na linha " + to_string(contador_linha) + " Dupla definição para o mesmo rótulo: " + primeira_palavra );
       } 
       
       codigo_objeto = codigo_objeto + monta_linha(resto_linha);
     }
+  } else if( primeiro_token == "INVALID")
+  {
+    gerenciador_erros->addError(0, 1, "Na linha " + to_string(contador_linha) + " Token inválido: " + primeira_palavra );
+    return ""; // HOUVE UM ERRO, DEVERIA SER UM DECIMAL
+  } else if( primeiro_token == "DIRECTIVE" ) {
+    coordenada_segundo_espaco = linha.find(" ", coordenada_primeiro_espaco+1);
+    if( coordenada_segundo_espaco == string::npos ) 
+    { 
+      segunda_palavra = linha.substr(coordenada_primeiro_espaco + 1, linha.size() - coordenada_primeiro_espaco-1 );
+    } else {
+      segunda_palavra = linha.substr(coordenada_primeiro_espaco + 1, coordenada_segundo_espaco - coordenada_primeiro_espaco -1 );
+    }
+    if(segunda_palavra != "DATA" && segunda_palavra != "TEXT") gerenciador_erros->addError(0, 2, "Na linha " + to_string(contador_linha) + ". Sessão inválida " + segunda_palavra );
+  } else {
+    gerenciador_erros->addError(0, 2, "Na linha " + to_string(contador_linha) + " começando com " + primeira_palavra );
   }
-
+  
   return codigo_objeto;
 
   // Se for um decimal já imprime direto
@@ -472,22 +549,24 @@ string Assembler::monta_texto( string nome_arquivo, string nome_pasta )
   
   string codigo_objeto = "";
   string codigo_objeto_linha, nome_rotulo, codigo_pendente, codigo_corrigido, texto_preprocessado;
-  int endereco_pendencia, coordenada_equ, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
-  int tamanho_codigo_pendente;
+  int tamanho_codigo_pendente, endereco_pendencia, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
+  size_t coordenada_equ ;
   vector<int> indice_enderecos;
 
   string texto = leitor->carrega_texto( nome_pasta+nome_arquivo );
-  coordenada_equ = texto.find("EQU", 0);
+  coordenada_equ = texto.find("EQU ", 0);
   if( coordenada_equ == string::npos ){
     texto_preprocessado = texto;
   } else {
     texto_preprocessado = ifProcessor(texto);
   }
-  createFilePre(texto_preprocessado, nome_arquivo );
+
+  
   istringstream iss(texto_preprocessado);
 
   symbolTable.clear();
-  analisador_sintatico->reset_endereco();
+  analisador_sintatico->reset();
+  analisador_sintatico->gerenciador_erros->result = "";
   for (string linha; getline(iss, linha); contagem_linha += 1)
   { 
     codigo_objeto_linha = analisador_sintatico->monta_linha(linha);
@@ -537,9 +616,21 @@ string Assembler::monta_texto( string nome_arquivo, string nome_pasta )
         codigo_corrigido = to_string(symbolTable[i].address + incremento);
         codigo_objeto.replace(indice_inicio_codigo_objeto+1, tamanho_codigo_pendente, codigo_corrigido);
       } while( endereco_pendencia != -1 );
+    } else{
+      string mensagem_erro = "Faltando definição do Rótulo " + symbolTable[i].symbol;
+      analisador_sintatico->gerenciador_erros->addError(0, 3, mensagem_erro);
     }
   }
-  createFileObj( codigo_objeto, nome_arquivo );
+  
+  if(analisador_sintatico->gerenciador_erros->result != "")
+  {
+    analisador_sintatico->gerenciador_erros->printError();
+    codigo_objeto = "";
+    texto_preprocessado = "";
+  } else {
+    createFilePre(texto_preprocessado, nome_arquivo );
+    createFileObj( codigo_objeto, nome_arquivo );
+  }  
 
   return codigo_objeto;
 }

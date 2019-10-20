@@ -339,10 +339,18 @@ TEST_CASE( "Contagem", "[Semântico]" )
 { 
   SECTION( "Monta arquivo .asm para codigo objeto")
   {
-    REQUIRE( montador->monta_texto("teste_simpes.asm", "test_files/") == "11 00 3 00 11 00 10 00 2 00 11 00");
-    REQUIRE( montador->monta_texto("teste_sections_e_tabela_simbolos.asm", "test_files/") == "12 30 10 29 4 28 11 30 3 28 11 32 10 29 2 32 11 32 13 32 9 30 29 10 29 7 4 14 2 00 00 00 00");
-    REQUIRE( montador->monta_texto("teste_espacamento.asm", "test_files/") == "12 15 12 16 10 15 3 16 4 18 11 17 13 17 14 00 00 00 2");
+    REQUIRE( montador->monta_texto("teste_simpes.asm", "test_files/") == "11 2 3 1 11 3 10 4 2 5 11 6");
     REQUIRE( montador->monta_texto("triangulo.asm", "test_files/") == "12 15 12 16 10 15 3 16 4 18 11 17 13 17 14 00 00 00 2");
-
+    REQUIRE( montador->monta_texto("teste_sections_e_tabela_simbolos.asm", "test_files/") == "12 30 10 29 4 28 11 30 3 28 11 32 10 29 2 32 11 32 13 32 9 30 29 10 29 7 4 14 2 00 00 00 00");
   } //SECTION( "Conta linhas, endereços e percorre o arquivo")
+
+  SECTION( "Reporta erros léxicos, sintáticos e semânticos" )
+  {
+    REQUIRE( montador->monta_texto("teste_erro_semantico.asm", "test_files/") == "");
+    REQUIRE( montador->monta_texto("teste_erro_sintatico.asm", "test_files/") == "");
+    REQUIRE( montador->monta_texto("teste_erro_lexico.asm", "test_files/") == "");
+    REQUIRE( montador->monta_texto("teste_espacamento.asm", "test_files/") == "12 15 12 16 10 15 3 16 4 18 11 17 13 17 14 00 00 00 2");
+
+    
+  }
 }
