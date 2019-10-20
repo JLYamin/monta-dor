@@ -9,5 +9,6 @@ int main(int argc, char *argumentos_terminal[])
     string codigo_objeto;
     Assembler* montador = new Assembler();
     codigo_objeto = montador->monta_texto(nome_arquivo, nome_pasta);
+    
     return 0;
 }

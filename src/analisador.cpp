@@ -474,17 +474,18 @@ string Assembler::monta_texto( string nome_arquivo, string nome_pasta )
   
   string codigo_objeto = "";
   string codigo_objeto_linha, nome_rotulo, codigo_pendente, codigo_corrigido, texto_preprocessado;
-  int endereco_pendencia, coordenada_equ, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
-  int tamanho_codigo_pendente;
+  int tamanho_codigo_pendente, endereco_pendencia, indice_inicio_codigo_objeto, indice_final_codigo_objeto, contagem_linha = 0;
+  size_t coordenada_equ ;
   vector<int> indice_enderecos;
 
   string texto = leitor->carrega_texto( nome_pasta+nome_arquivo );
-  coordenada_equ = texto.find("EQU", 0);
+  coordenada_equ = texto.find("EQU ", 0);
   if( coordenada_equ == string::npos ){
     texto_preprocessado = texto;
   } else {
     texto_preprocessado = ifProcessor(texto);
   }
+
   
   istringstream iss(texto_preprocessado);
 
@@ -539,10 +540,20 @@ string Assembler::monta_texto( string nome_arquivo, string nome_pasta )
         codigo_corrigido = to_string(symbolTable[i].address + incremento);
         codigo_objeto.replace(indice_inicio_codigo_objeto+1, tamanho_codigo_pendente, codigo_corrigido);
       } while( endereco_pendencia != -1 );
+    } else{
+      string mensagem_erro = "Faltando definição do Rótulo " + symbolTable[i].symbol;
+      analisador_sintatico->gerenciador_erros->addError(0, 3, mensagem_erro);
     }
   }
-  createFilePre(texto_preprocessado, nome_arquivo );
-  createFileObj( codigo_objeto, nome_arquivo );
+  if(analisador_sintatico->gerenciador_erros->result != "")
+  {
+    analisador_sintatico->gerenciador_erros->printError();
+    codigo_objeto = "";
+    texto_preprocessado = "";
+  } else {
+    createFilePre(texto_preprocessado, nome_arquivo );
+    createFileObj( codigo_objeto, nome_arquivo );
+  }  
 
   return codigo_objeto;
 }

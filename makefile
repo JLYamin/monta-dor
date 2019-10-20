@@ -10,13 +10,13 @@ TDIR	=./tests
 
 LIBS	=-lm
 
-_DEPS	= leitor.hpp tabelas.hpp preprocessador.hpp escritor.hpp analisador.hpp simulador.hpp
+_DEPS	= leitor.hpp tabelas.hpp preprocessador.hpp escritor.hpp erros.hpp analisador.hpp simulador.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_TOBJ = leitor.o tabelas.o analisador.o preprocessador.o escritor.o tests_main.o tests_analisador.o
+_TOBJ = leitor.o tabelas.o analisador.o preprocessador.o escritor.o erros.o tests_main.o tests_analisador.o
 TOBJ = $(patsubst %,$(ODIR)/%,$(_TOBJ))
 
-_OBJ = leitor.o tabelas.o analisador.o preprocessador.o escritor.o
+_OBJ = leitor.o tabelas.o analisador.o preprocessador.o erros.o escritor.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 _OBJ_SIMULADOR = $(_OBJ) simulador.o

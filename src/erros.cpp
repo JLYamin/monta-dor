@@ -1,19 +1,23 @@
 #include "erros.hpp"
 
-void ErrorPrinter::addError(int line, int type) {
-  result += "Linha " + to_string(line) + ": Erro ";
+void ErrorPrinter::addError(int line, int type, string message)
+{
+  
   switch (type)
   {
   case 1:
-    result += "léxico\n";
+    result += "Linha " + to_string(line) + ": Erro " + message;
+    result += "\n";
     break;
 
   case 2:
-    result += "sintático\n";
+    result += "Linha " + to_string(line) + ": Erro " + message;
+    result += "\n";
     break;
 
   case 3:
-    result += "semântico\n";
+    result += "Erro: " + message;
+    result += "\n";
     break;
   }
 }

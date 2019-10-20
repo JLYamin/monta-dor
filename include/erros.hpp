@@ -13,7 +13,7 @@ class ErrorPrinter {
   public:
   string result = "";
 
-  void addError(int line, int type);
+  void addError(int line, int type, string message);
   void printError();
 };
 
