@@ -16,9 +16,14 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _TOBJ = reader_writer.o tabelas.o analisador.o preprocessador.o escritor.o tests_main.o tests_analisador.o
 TOBJ = $(patsubst %,$(ODIR)/%,$(_TOBJ))
 
-_OBJ = reader_writer.o tabelas.o analisador.o preprocessador.o escritor.o main.o
+_OBJ = reader_writer.o tabelas.o analisador.o preprocessador.o escritor.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
+_OBJ_SIMULADOR = $(_OBJ) simulador.o
+OBJ_SIMULADOR = $(patsubst %,$(ODIR)/%,$(_OBJ_SIMULADOR))
+
+_OBJ_MONTADOR = $(_OBJ) montador.o
+OBJ_MONTADOR = $(patsubst %,$(ODIR)/%,$(_OBJ_MONTADOR))
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 	$(CC)	-c	-o 	$@	$<	$(CFLAGS)
@@ -32,7 +37,10 @@ analisador_tester:$(TOBJ)
 gcov_assembler: $(TOBJ)
 	$(CC) -o $@ $^ $(GCOVFLAGS) $(LIBS)
 
-play_assembler: $(OBJ)
+montador: $(OBJ_MONTADOR)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+
+simulador: $(OBJ_SIMULADOR)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 all_tester:$(TOBJ)
