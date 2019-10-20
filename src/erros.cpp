@@ -6,17 +6,17 @@ void ErrorPrinter::addError(int line, int type, string message)
   switch (type)
   {
   case 1:
-    result += "Linha " + to_string(line) + ": Erro " + message;
+    result += "Erro léxico: " + message;
     result += "\n";
     break;
 
   case 2:
-    result += "Linha " + to_string(line) + ": Erro " + message;
+    result += "Erro sintático: " + message;
     result += "\n";
     break;
 
   case 3:
-    result += "Erro: " + message;
+    result += "Erro semântico: " + message;
     result += "\n";
     break;
   }
