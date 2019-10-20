@@ -2,9 +2,9 @@
 
 */
 
-#include "reader_writer.hpp"
+#include "leitor.hpp"
 
-string ReaderWriter::carrega_texto(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
+string Leitor::carrega_texto(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
 {
   ifstream infile (caminho_do_arquivo_completo);
   string data;
@@ -44,7 +44,7 @@ string ReaderWriter::carrega_texto(string caminho_do_arquivo_completo = "Entrada
 
 /*
 int main(){
-  ReaderWriter leitura;
+  Leitor leitura;
   cout << leitura.texto_lido;
   return 0;
 }

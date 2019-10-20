@@ -214,6 +214,7 @@ string Scanner::tokenize(const string palavra )
 Parser::Parser()
 {
   analisador_lexico = new Scanner();
+  gerenciador_erros = new ErrorPrinter();
   contagem_endereco = 0;
 }
 
@@ -230,7 +231,8 @@ void Parser::reset_endereco()
 
 Parser::~Parser()
 {
-  delete(analisador_lexico);
+  delete( analisador_lexico );
+  delete( gerenciador_erros );
 }
 
 string Parser::monta_subargumento(const string  subargumento, const int contagem_argumentos )
@@ -483,7 +485,7 @@ string Assembler::monta_texto( string nome_arquivo, string nome_pasta )
   } else {
     texto_preprocessado = ifProcessor(texto);
   }
-  createFilePre(texto_preprocessado, nome_arquivo );
+  
   istringstream iss(texto_preprocessado);
 
   symbolTable.clear();
@@ -539,6 +541,7 @@ string Assembler::monta_texto( string nome_arquivo, string nome_pasta )
       } while( endereco_pendencia != -1 );
     }
   }
+  createFilePre(texto_preprocessado, nome_arquivo );
   createFileObj( codigo_objeto, nome_arquivo );
 
   return codigo_objeto;

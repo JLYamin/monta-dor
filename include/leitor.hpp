@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class ReaderWriter
+class Leitor
 {
     public:
     string carrega_texto(string);

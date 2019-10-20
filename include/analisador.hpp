@@ -1,5 +1,6 @@
-#include "reader_writer.hpp"
+#include "leitor.hpp"
 #include "escritor.hpp"
+#include "erros.hpp"
 #include "preprocessador.hpp"
 #ifndef CATCH_H
 #define CATCH_H
@@ -34,6 +35,7 @@ class Parser
     Parser();
     ~Parser();
     Scanner* analisador_lexico;
+    ErrorPrinter* gerenciador_erros;
     string monta_linha(string);
     int get_ultimo_endereco();
     void reset_endereco();
@@ -53,7 +55,7 @@ class Assembler
     Assembler();
     ~Assembler();
     Parser* analisador_sintatico;
-    ReaderWriter* leitor;
+    Leitor* leitor;
     string monta_texto( string, string );
 
 
