@@ -6,6 +6,20 @@ vector <string> code;         // Vetor do código
 vector<string>::iterator it;  // Vetor do iterador
 int jmp;                      // Flag para verificar se foi feito um salto
 
+int main (int argc, char* argv[]) {
+  ifstream objFile;
+  objFile.open(argv[1]);
+
+  stringstream strStream;
+  strStream << objFile.rdbuf();
+  string file = strStream.str();
+
+  codeExecute(file);
+
+  return 0;
+}
+
+
 void codeExecute(string file) {
   code = fileToVector(file);
   int acc, opcode, arg1, arg2;
