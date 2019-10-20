@@ -15,16 +15,16 @@ Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasíl
 
 (*Baseado nas funcionalidades que a princípio acho que existirão*)
 #### Montador:
-  - [ ] Leitura
+  - [x] Leitura
     - [x] Receber e abrir o arquivo
-    - [ ] Contador de endereços/posição (thiago)
-  - [ ] Parser
-    - [ ] Detecção das áreas de texto e *data*
-    - [ ] Detecção das linhas
+    - [x] Contador de endereços/posição 
+  - [x] Parser
+    - [x] Detecção das áreas de texto e *data*
+    - [x] Detecção das linhas
     - [x] Detecção das instruções
-    - [ ] Detecção dos argumentos das instruções
+    - [x] Detecção dos argumentos das instruções
     - [x] Detecção de rótulos (com ou sem enter após)
-  - [ ] Tabelas
+  - [x] Tabelas
     - [x] Tabela de Instruções para consulta
     - [x] Montagem da tabela de símbolos
   - [ ] Detecção de Erros
@@ -32,47 +32,47 @@ Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasíl
     - [ ] Detecção de erros sintáticos
     - [ ] Detecção de erros semânticos
     - [x] Exibição das linhas e classificação dos erros
-  - [ ] Código de Máquina
-    - [ ] Adicionar o *opcode*
-    - [ ] Resolver as pendências dos endereços da Tabela de Símbolos
-  - [ ] Arquivos de Saída
-    - [ ] Geração do arquivo pré-processado (*não sei se entendi do que se trata*)
-    - [ ] Geração do arquivo objeto contendo o código de máquina
+  - [x] Código de Máquina
+    - [x] Adicionar o *opcode*
+    - [x] Resolver as pendências dos endereços da Tabela de Símbolos
+  - [x] Arquivos de Saída
+    - [x] Geração do arquivo pré-processado (*não sei se entendi do que se trata*)
+    - [x] Geração do arquivo objeto contendo o código de máquina
  #### Simulador:
-   - [ ] Receber o programa de entrada
-   - [ ] Identificar as instruções de INPUT e OUTPUT, exibindo o texto pedido
-   - [ ] Identificar e executar as instruções
-   - [ ] Exibir o conteúdo do acumulador ao executar uma instrução
-   - [ ] Exibir o endereço e conteúdo de endereços modificados pela instrução
+   - [x] Receber o programa de entrada
+   - [x] Identificar as instruções de INPUT e OUTPUT, exibindo o texto pedido
+   - [x] Identificar e executar as instruções
+   - [x] Exibir o conteúdo do acumulador ao executar uma instrução
+   - [x] Exibir o endereço e conteúdo de endereços modificados pela instrução
 
  Acho que é isso! Fique com esse gif fofo:
 
  ![Gif fofo](https://media.giphy.com/media/4Zo41lhzKt6iZ8xff9/giphy.gif "Cachorrinhoooo")
 
-### O que cada um vai fazer:
-Thiago
-	- Loop de leitura do arquivo;
-	- Contador de linhas (para a impressão de erros, é só contar os \n);
-	- Contador de endereços (para adição na tabela de símbolos);
-	- Integrar a tabela de símbolos à leitura
-
-JL
-	- Escrita dos arquivos
-	- Arquivo pré-processado
-	- Detecção de erros semânticos
-
 
 ### Instalação
 
 Depois de extrair ou clonar o repositório, entre na pasta principal e digite em seu terminal:
+Para compilar o montador:
 ```
-make
+make montador
 ```
 
-### Usando o Simulador
-Após isso, você pode executar o simulador usando  ocomando
+Para compilar o simulador
 ```
-./play_assembler
+make simulador
+```
+
+
+### Usando o Montador e o Simulador
+Após isso, você pode executar o montador usando o comando
+```
+./montador "bin.asm"
+```
+Para qualquer outro arquivo .asm dentro da pasta Entradas ASM, basta digitar seu nome com a extensão
+
+```
+./simulador "bin.obj"
 ```
 
 ## Executando os testes
