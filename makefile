@@ -1,7 +1,7 @@
 IDIR	=./include
 CC      = g++ -std=c++14
-CFLAGS  = -Wall -g -I$(IDIR) --coverage 
-GCOVFLAGS = $(CFLAGS) --coverage -fPIC  -O0 
+CFLAGS  = -Wall -g -I$(IDIR) --coverage
+GCOVFLAGS = $(CFLAGS) --coverage -fPIC  -O0
 
 ODIR	= ./src/obj
 LDIR	=./lib
@@ -9,22 +9,27 @@ SDIR	=./src
 TDIR	=./tests
 
 LIBS	=-lm
-	
-_DEPS	= reader_writer.hpp tabelas.hpp preprocessador.hpp escritor.hpp analisador.hpp 
+
+_DEPS	= leitor.hpp tabelas.hpp preprocessador.hpp escritor.hpp erros.hpp analisador.hpp simulador.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_TOBJ = reader_writer.o tabelas.o analisador.o preprocessador.o escritor.o tests_main.o tests_analisador.o
+_TOBJ = leitor.o tabelas.o analisador.o preprocessador.o escritor.o erros.o tests_main.o tests_analisador.o
 TOBJ = $(patsubst %,$(ODIR)/%,$(_TOBJ))
 
-_OBJ = reader_writer.o tabelas.o  analisador.o preprocessador.o escritor.o main.o
+_OBJ = leitor.o tabelas.o analisador.o preprocessador.o erros.o escritor.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
+_OBJ_SIMULADOR = $(_OBJ) simulador.o
+OBJ_SIMULADOR = $(patsubst %,$(ODIR)/%,$(_OBJ_SIMULADOR))
+
+_OBJ_MONTADOR = $(_OBJ) montador.o
+OBJ_MONTADOR = $(patsubst %,$(ODIR)/%,$(_OBJ_MONTADOR))
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 	$(CC)	-c	-o 	$@	$<	$(CFLAGS)
 
 $(ODIR)/%.o: $(TDIR)/%.cpp $(DEPS)
-	$(CC)	-c	-o 	$@	$<	$(CFLAGS) 
+	$(CC)	-c	-o 	$@	$<	$(CFLAGS)
 
 analisador_tester:$(TOBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
@@ -32,7 +37,10 @@ analisador_tester:$(TOBJ)
 gcov_assembler: $(TOBJ)
 	$(CC) -o $@ $^ $(GCOVFLAGS) $(LIBS)
 
-play_assembler: $(OBJ)
+montador: $(OBJ_MONTADOR)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+
+simulador: $(OBJ_SIMULADOR)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 all_tester:$(TOBJ)
