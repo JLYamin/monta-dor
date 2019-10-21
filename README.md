@@ -1,19 +1,17 @@
-# monta-dor
-Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasília
-
-### Alunos:
-- João Lucas Azevedo Yamin Rodrigues da Cunha - 
+## Montador e Simulador de Assembly Inventado
+### Disciplina de Software Básico - Turma B - 2019/2
+Alunos:
+- João Lucas Azevedo Yamin Rodrigues da Cunha - 17/0013731
 - Thiago Luis Rodrigues Pinho - 15/0065205
 
-**Link da especificação do trabalho:** [1º Trabalho Prático - Aprender UnB](https://aprender.ead.unb.br/pluginfile.php/724430/mod_resource/content/0/Trabalho1.pdf)
+## Informações a respeito do trabalho:
 
-## Regrinhas:
-- Vamos seguir os rolês de git e criar branches para as funcionalidades que estaremos fazendo;
-- É isto, acabou as regras não consigo pensar em outras.
+Este trabalho foi desenvolvido com C++ utilizando-se dois sistemas operacionais diferentes: tanto no Ubuntu quanto no Linux Subsystem do Windows.
 
-## To do list:
+Este trabalho foi feito orientado a testes ao final desse documento há uma explicação de como rodar os testes.
 
-(*Baseado nas funcionalidades que a princípio acho que existirão*)
+## Nós nos organizamos por funcionalidades a serem cumpridas
+
 #### Montador:
   - [x] Leitura
     - [x] Receber e abrir o arquivo
@@ -45,10 +43,6 @@ Repositório do Primeiro Trabalho de Software Básico da Universidade de Brasíl
    - [x] Exibir o conteúdo do acumulador ao executar uma instrução
    - [x] Exibir o endereço e conteúdo de endereços modificados pela instrução
 
- Acho que é isso! Fique com esse gif fofo:
-
- ![Gif fofo](https://media.giphy.com/media/4Zo41lhzKt6iZ8xff9/giphy.gif "Cachorrinhoooo")
-
 
 ### Instalação
 
@@ -65,15 +59,24 @@ make simulador
 
 
 ### Usando o Montador e o Simulador
-Após isso, você pode executar o montador usando o comando
+Após isso, você pode executar o montador ou o simulador usando o comando
 ```
-./montador "bin.asm"
+./montador bin.asm
 ```
-Para qualquer outro arquivo .asm dentro da pasta entradas_asm, basta digitar seu nome com a extensão
 
 ```
-./simulador "bin.obj"
+./simulador bin.obj
 ```
+
+Para qualquer outro arquivo .asm dentro da pasta entradas_asm, basta digitar seu nome com a extensão. Também é possível especificar qual pasta você gostaria de buscar o arquivo a ser aberto.
+```
+./montador bin.asm ./entradas_asm/
+```
+
+```
+./simulador bin.obj ./saidas/
+```
+
 
 ## Executando os testes
 
@@ -89,4 +92,9 @@ Se você quiser ver os testes antes de executá-los:
 Ou pode somente rodar os testes:
 ```
 ./all_tester
+```
+
+## Para limpar arquivos intermediários
+```
+make clean
 ```
