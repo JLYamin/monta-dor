@@ -53,14 +53,13 @@ int SymbolRow::removePendency() {
     {
       return_value = pendencies.top();
       pendencies.pop();
-      return return_value;
     }
   }
   catch (int error)
   {
     cerr << "[ERRO] SymbolRow::removePendency: A pilha do símbolo '" << symbol << "' está vazia.\n";
-    return return_value;
   }
+  return return_value;
 }
 
 // Encapsula a tabela de símbolos e adiciona um símbolo à ela
