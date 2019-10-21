@@ -69,7 +69,7 @@ Após isso, você pode executar o montador usando o comando
 ```
 ./montador "bin.asm"
 ```
-Para qualquer outro arquivo .asm dentro da pasta Entradas ASM, basta digitar seu nome com a extensão
+Para qualquer outro arquivo .asm dentro da pasta entradas_asm, basta digitar seu nome com a extensão
 
 ```
 ./simulador "bin.obj"

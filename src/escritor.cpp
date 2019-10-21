@@ -3,6 +3,7 @@
 
 // Ao passar a string de código e o nome do arquivo original, cria um arquivo .pre
 void createFilePre(string code, string filename) {
+  filename = "./saidas/" + filename;
   size_t index = filename.find_last_of(".");
   string rawname = filename.substr(0, index);
   string prename = rawname + ".pre";
@@ -15,6 +16,7 @@ void createFilePre(string code, string filename) {
 
 // Ao passar a string de código e o nome do arquivo original, cria um arquivo .obj
 void createFileObj(string code, string filename) {
+  filename = "./saidas/" + filename;
   size_t index = filename.find_last_of(".");
   string rawname = filename.substr(0, index);
   string objname = rawname + ".obj";
