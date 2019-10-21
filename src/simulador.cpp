@@ -6,9 +6,23 @@ vector <string> code;         // Vetor do código
 vector<string>::iterator it;  // Vetor do iterador
 int jmp;                      // Flag para verificar se foi feito um salto
 
-int main (int argc, char* argv[]) {
+int main (int numero_argumentos, char* argumentos_terminal[]) {
   ifstream objFile;
-  objFile.open(argv[1]);
+  string nome_pasta, nome_arquivo;
+
+  if( numero_argumentos > 2 )
+  {
+    nome_pasta = argumentos_terminal[2];
+    nome_arquivo = argumentos_terminal[1];
+  } else if ( numero_argumentos > 1 ) {
+    nome_pasta = "saidas/";
+    nome_arquivo = argumentos_terminal[1];
+  } else {
+    nome_pasta = "saidas/";
+    nome_arquivo = "bin.obj";
+  }
+
+  objFile.open(nome_pasta+nome_arquivo);
 
   stringstream strStream;
   strStream << objFile.rdbuf();

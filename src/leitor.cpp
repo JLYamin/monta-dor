@@ -4,7 +4,7 @@
 
 #include "leitor.hpp"
 
-string Leitor::carrega_texto(string caminho_do_arquivo_completo = "Entradas ASM/bin.asm")
+string Leitor::carrega_texto(string caminho_do_arquivo_completo = "entradas_asm/bin.asm")
 {
   ifstream infile (caminho_do_arquivo_completo);
   string data, linha;
