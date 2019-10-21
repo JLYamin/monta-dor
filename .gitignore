@@ -42,3 +42,9 @@ all_tester
 montador
 
 simulador
+
+analisador_tester
+
+gcov_assembler
+
+leitura
